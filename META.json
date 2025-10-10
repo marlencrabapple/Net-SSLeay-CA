@@ -4,7 +4,7 @@
       "Ian P Bradley <ian.bradley@studiocrabapple.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v3.1.27, CPAN::Meta::Converter version 2.150010",
+   "generated_by" : "Minilla/v3.1.28, CPAN::Meta::Converter version 2.150010",
    "license" : [
       "perl_5"
    ],
@@ -33,27 +33,42 @@
       },
       "develop" : {
          "requires" : {
+            "App::FatPacker" : "0",
+            "Minilla" : "0",
+            "Software::License" : "0",
             "Test::CPAN::Meta" : "0",
             "Test::MinimumVersion::Fast" : "0.04",
             "Test::PAUSE::Permissions" : "0.07",
             "Test::Pod" : "1.41",
-            "Test::Spellunker" : "v0.2.7"
+            "Test::Spellunker" : "v0.2.7",
+            "inc::latest" : "0"
          }
       },
       "runtime" : {
          "requires" : {
-            "Cwd" : "0",
-            "File::chdir" : "0",
+            "Const::Fast" : "0",
+            "Const::Fast::Exporter" : "0",
+            "Devel::StackTrace::WithLexicals" : "0",
+            "Exporter::Shiny" : "0",
+            "Exporter::Tiny" : "0",
             "IPC::Run3" : "0",
             "List::Util" : "0",
             "Net::SSLeay" : "0",
             "Object::Pad" : "0",
             "Path::Tiny" : "0",
+            "Syntax::Keyword::Defer" : "0",
+            "Syntax::Keyword::Dynamically" : "0",
+            "Syntax::Keyword::MultiSub" : "0",
+            "Time::Moment" : "0",
+            "Time::Piece" : "0",
+            "meta" : "0",
+            "overload" : "0",
             "perl" : "v5.40.0"
          }
       },
       "test" : {
          "requires" : {
+            "Module::Build::Tiny" : "0",
             "Test::More" : "0.98"
          }
       }

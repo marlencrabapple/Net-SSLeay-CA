@@ -1,0 +1,8 @@
+[default_ca] # alias
+common_name = {
+  name 
+}
+
+# common_name = "$" # Variables are resolved in the following order: environment, macros, and options passed at CLI
+#
+#

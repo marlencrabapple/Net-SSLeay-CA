@@ -23,6 +23,8 @@ on 'test' => sub {
 };
 
 on 'develop' => sub {
+    requires 'Perl::Critic';
+    requires 'Perl::Tidy';
     requires 'Minilla';
     requires 'App::FatPacker';
     requires 'inc::latest';

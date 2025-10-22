@@ -1,53 +1,67 @@
 use Object::Pad ':experimental(:all)';
 
 package Net::SSLeay::CA::Base;
-role Net::SSLeay::CA::Base;
+
+class Net::SSLeay::CA::Base : abstract;
 
 use utf8;
 use v5.40;
 
-use Const::Fast::Exporter;
 use Data::Dumper;
 use Time::HiRes;
 use Time::Piece;
 use Time::Moment;
+use List::Util 'first';
 use Syntax::Keyword::Dynamically;
+use Const::Fast;    #::Exporter;
 
-use parent 'Exporter';
-use Exporter 'import';
+# use parent 'Exporter';
+# use Exporter 'import';
 
-use vars qw'@ISA @EXPORT';
-use subs qw(dmsg epoch err);
+# use vars qw'@ISA @EXPORT';
+# use subs qw(dmsg epoch err);
 
-@ISA = qw(Exporter);
-@EXPORT = qw(dmsg epoch err);
+# @ISA    = qw(Exporter);
+# @EXPORT = qw(dmsg epoch err);
 
 const our $DEBUG        => $ENV{DEBUG} // 0;
 const our $S_UNKNOWNERR => 'Unknown fatal error';
 
-eval "use Devel::StackTrace::WithLexicals" if $DEBUG;
+# eval "use Devel::StackTrace::WithLexicals" if $DEBUG;
 
-field $debug :accessor :param = $DEBUG;
+# field $env : param(runenv) : inheritable {
+#     (
+#         map {
+#             my $name = $_;
+#             my $val =
+#               first { $_ } @ENV{ map { uc "$_$name" } ( 'ca_', '' ) };
+#             $name => $val
+#         } qw(verbose debug)
+#     )
+# }
+# field $debug : accessor : param = $DEBUG;
 
-APPLY ($mop) {
-    use utf8;
-    use v5.40;
+# APPLY($mop) {
+#     use utf8;
+#     use v5.40;
 
-    use Exporter 'import';
-    our @EXPORT = @{__PACKAGE__::EXPORT}
-};
+#     use Exporter 'import';
+#     our @EXPORT = @{__PACKAGE__::EXPORT}
+# };
 
-ADJUSTPARAMS($param) {
-    use utf8;
-    use v5.40;
-    our @EXPORT = qw(dmsg epoch err);
-}
+# ADJUSTPARAMS($param) {
+#     use utf8;
+#     use v5.40;
+#     our @EXPORT = qw(dmsg epoch err);
+# }
 
-sub epoch( $join = '', %opts) {
+sub epoch( $join = '', %opts ) {
     join $join, Time::HiRes::gettimeofday;
 }
 
-sub dmsg ( @msgs ) {
+sub dmsg (@msgs) {
+
+    use Syntax::Keyword::Dynamically;
     $DEBUG || return '';
 
     my @caller = caller 0;
@@ -78,17 +92,19 @@ sub dmsg ( @msgs ) {
 }
 
 sub err : prototype($;$%) (
-    $msg = ( $! // $S_UNKNOWNERR ),
-    $exit     = ( $? ? $? >> 8 : 255 ), %opts
+    $msg  = ( $! // $S_UNKNOWNERR ),
+    $exit = ( $? ? $? >> 8 : 255 ), %opts
   )
 {
     dmsg( { exit => $exit, msg => $msg, opts => \%opts } );
 
-    my $errstr = $msg isa 'ARRAY' ? join "\n", map {
+    my $errstr = $msg isa 'ARRAY'
+      ? join "\n", map {
         my $str = $_ isa 'HASH' ? $$_{msg} : $_;
         $str = $S_UNKNOWNERR if $str =~ /^[0-9]+$/ && $str == 0;
         $str
-    } @$msg : $msg;
+      } @$msg
+      : $msg;
 
     die "ERROR: $errstr ($exit)";
 }

@@ -2,21 +2,38 @@ use Object::Pad ':experimental(:all)';
 
 package Net::SSLeay::CA::Util;
 
-class Net::SSLeay::CA::Util;
+class Net::SSLeay::CA::Util : isa(Net::SSLeay::CA::Base);
 
 use utf8;
 use v5.40;
 
-use parent 'Exporter';
+# use parent 'Exporter';
+# use vars '@EXPORT_OK';
 
-field $asdg;
+# @EXPORT_OK = qw(user_faux_email hostfqdn domainname);
 
-method adsf { 
+use List::Util 'first';
+use Net::Domain;
 
-    #D$self->cliopts->%{qw(config cmd extra-cmd verbose debug catop)};
+sub user_faux_mail {
+    first { /\.[^.]+$/ } @Net::Domain::{qw(hostfqdn domainname make_anonymous)};
 }
 
-use Syntax::Keyword::Dynamically;
+sub hostfqdn {
+    Net::Domain::__SUB__->(@_);
+}
+
+sub domainname {
+    Net::Domain::__SUB__->(@_);
+}
+
+method adsf {
+    dmsg( { $self->cliopts->%{qw(config cmd extra-cmd verbose debug catop)} } );
+}
+
+sub valid_timespan {
+
+}
 
 sub rc4 : prototype($$;$) ( $message, $key, $skip = undef ) {
     my @s       = 0 .. 255;
@@ -70,7 +87,7 @@ method cfg_expand : common : prototype($%) ( $str, %grammar ) {
 }
 
 method make_anonymous : common ( $salt = __PACKAGE__->epoch ) {
-    my $string = `hostname`;
+    my $string = hostfqdn() // domainname();
     $string .= ",$salt";
 
     srand unpack "N",

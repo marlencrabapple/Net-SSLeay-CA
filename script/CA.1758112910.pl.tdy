@@ -38,8 +38,8 @@ my @X509   = ( @openssl, "x509" );
 my @PKCS12 = ( @openssl, "pkcs12" );
 
 # Default values for various configuration settings.
-my $CATOP      = "./demoCA";
-my $CAKEY      = "cakey.pem";
+my $CATOP      = $ENV{CATOP} // "./demoCA";
+my $CAKEY      = $ENV{CAKEY} // "cakey.pem";
 my $CAREQ      = "careq.pem";
 my $CACERT     = "cacert.pem";
 my $CACRL      = "crl.pem";
@@ -286,10 +286,10 @@ sub copy_pemfile {
 
     open my $IN,  '<:utf8', $infile  || die "Cannot open $infile, $!";
     open my $OUT, 'utf8>',  $outfile || die "Cannot write to $outfile, $!";
-    while ( my $line = <$IN> ) {
-        $found = 1       if $line =~ /^-----BEGIN.*$bound/;
-        print $OUT $line if $found;
-        $found = 2, last if $line =~ /^-----END.*$bound/;
+    while (<$IN>) {
+        $found = 1    if /^-----BEGIN.*$bound/;
+        print $OUT $_ if $found;
+        $found = 2, last if /^-----END.*$bound/;
     }
     close $IN;
     close $OUT;

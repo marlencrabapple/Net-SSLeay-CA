@@ -1,40 +1,47 @@
 #!/usr/bin/env bash
-# set -x
-
 [[ "${DEBUG:-0}" -ne 0 ]] && set -x
 
 CAtop="${CATOP:-"$HOME/.local/ca"}"
-signingCA=""
-signingCAkey="${signingCA/%(.pem)/-key$1}"
-CAline="${CALINE:-Local}"
+
+for path in "$CAtop"/{private,newcert,crl,certs,db}; do
+  [[ -d "$path" ]] || mkdir -p "$path"
+done
+
+[[ -f "$CAtop/db/index" ]] || touch "$CAtop/db/index"
+[[ -f "$CAtop/db/serial" ]] || openssl rand -hex 16 > ca/db/serial
+
+signingCA="$SIGNINGCA"
+signingCA_key="$SIGNINGCA_KEY"
+
+CArank="${CARANK:-Local}"
 CAinitial="${CAINITIAL:-X}"
-templateCA="$HOME/.local/ca/x509toreq/pem/ISRG_Root_X1.pem"
+templateCA="${CATEMPLATE:-$CAtop/x509toreq/pem/ISRG_Root_X1.pem}"
 keyalgo="${KEYALGO:-RSA}"
 keybits="${KEYBITS:-4096}"
 cnorg="$(whoami)"
 
-[[ -n "$signingCA" ]] &&  pathlen=0
+[[ -n "$signingCA" ]] && pathlen=0
 
 (
-  if [[ ! -d "$HOME/.local/ca/x509toreq" ]]; then
-    mkdir -p "$HOME/.local/ca/x509toreq"
-    cd "$HOME/.local/ca/x509toreq"
-    trust extract --verbose --format=x509-directory --filter=ca-anchors \
-     "$HOME/.local/ca/x509toreq"
+  if [[ ! -d "$CAtop/x509toreq" ]]; then
+    mkdir -p "$CAtop/x509toreq"
+    
+    cd "$CAtop/x509toreq"
+
+    trust extract --verbose --format=pem-directory --filter=ca-anchors \
+                  --purpose=server-auth \
+                  "$CAtop/x509toreq/pem"
   fi
 )
 
-hostfqdn=$(
-    perl -Mv5.40 -MData::Dumper -MNet::Domain \
-        -e 'say Net::Domain::hostfqdn || Net::Domain::domainname;'
-)
+hostfqdn=$(perl -Mv5.40 -MData::Dumper -MNet::Domain -e 'say Net::Domain::hostfqdn || Net::Domain::domainname')
 
-cnsubj="${SUBJ_CN:-$cnorg@$hostfqdn ${CAline:-Local} CA $keyalgo ${CAinitial:-X}${rev:-1}}"
+cnsubj="${SUBJ_CN:-$cnorg@$hostfqdn ${CArank:-Local} CA $keyalgo ${CAinitial:-X}${rev:-1}}"
 
 newCAbase="$(perl -Mv5.40 -e 'say shift =~ s/\s/_/rg' "$cnsubj")"
 newCAcsr="$newCAbase${SANHOSTS[*]:+"+${#SANHOSTS[*]}"}.csr"
 newCAcert="${newCAcsr/%csr/pem}"
-newCAkey="${newCAcert/%(.pem)/-key}ers you need at least one of the default or base providers available. Did you forget to load them? Info: Global default $1"
+newCAkey="${newCAcert/%.pem/-key.pem}"
 
 echo "▶ Generating private key ($keyalgo $keybits):"
 
@@ -46,27 +53,56 @@ echo "▶ Generating private key ($keyalgo $keybits):"
 pkeyconf=("$keyalgo" "bits:$keybits")
 
 openssl genpkey -algorithm "${pkeyconf[*]:0:1}" -pkeyopt "${pkeyconf[*]:1:1}" \
-    -out "$newCAkey"
+    -out "$CAtop/private/$newCAkey"
     # -pass "pass:$(pass generate \
-    #     -n "$newCAbase/$newCAkey" 128 &&
+    #     -n "$newCAbase/$newCAkey" 128 &&-
     #     pass show "Net::SSLeay::CA/$newCAkey" |
     #     head -n 1)" \
     # -out "$newCAkey"
 
 echo -e "▶ Using '$(basename "$templateCA")' as a template for your CA certificate:\n"
-echo -e "Replacing fields with configured options with distinguising details from your local session as defaults/fallback values.\n"
+echo -e "▶ Replacing fields with configured options with distinguising details from your local session as defaults/fallback values.\n"
 
-openssl x509 -in "$templateCA" -x509toreq -copy_extensions copyall \
+
+x509args=(-in "$templateCA" -x509toreq
     -out "$CAtop/$newCAcsr" \
-    -set_subject "/CN=$cnsubj/O=$hostfqdn/OU=Local User/C=US/" \
-    -key "$CAtop/$newCAkey"
+    -set_subject "/CN=$cnsubj/O=$hostfqdn/OU=${SUBJ_ON:-Local User}/C=${SUBJ_C:-US}/" \
+    -key "$CAtop/private/$newCAkey"
+)
+
+[[ -n "$CLREXT" ]] && x509args+=(-clrext)
+[[ -n "$EXTFILE" ]] && x509args+=(-extfile "$EXTFILE")
+[[ -n "$EXTENSIONS" ]] && x509args+=(-extensions "$EXTENSIONS")
+[[ -n "$OPENSSL_CONF" ]] && x509args+=(-config "$OPENSSL_CONFIGH")
+
+openssl x509 "${x509args[@]}"
 
 echo "▶ Self-signing newly minted certificate:"
 
-openssl x509 -req -in "$CAtop/$newCAcsr" \
-    -copy_extensions copyall \
-    -out "$CAtop/$newCAcert" \
-    -set_subject "/CN=$cnsubj/O=$hostfqdn/OU=Local User/C=US/" \
-    -key "$CAtop/$newCAkey" -days 3652
+CAargs=(-in "$CAtop/$newCAcsr"
+    -verbose
+    -config "$OPENSSL_CONFIG"
+    # -copy_extensions copyall
+    -out "$CAtop/$newCAcert"
+    -subj "/CN=$cnsubj/O=$hostfqdn/OU=${SUBJ_ON:-Local User}/C=${SUBJ_C:-US}/"
+    -notext -rand_serial -utf8
+    -days "${VALIDDAYS:-7305}")
+
+if [[ -n "$signingCA" ]] && [[ -n "$signingCA_key" ]]; then
+  CAargs+=(-cert "$signingCA" -keyfile "$signingCA_key")
+else
+  CAargs+=(-selfsign -keyfile "$CAtop/private/$newCAkey")
+fi
+
+[[ -n "$CLREXT" ]] && CAargs+=(-clrext)
+[[ -n "$EXTFILE" ]] && CAargs+=(-extfile "$EXTFILE")
+[[ -n "$EXTENSIONS" ]] && CAargs+=(-extensions "$EXTENSIONS")
+[[ -n "$OPENSSL_CONFIG" ]] && CAargs+=(-config "$OPENSSL_CONFIG")
+
+openssl ca "${CAargs[@]}"
+
+echo "☆彡・SUCCESS!・☆彡"
+echo -e "\nSucessfully generated and signed certificate authority at:\n"
+echo -e "▶ 《$CAtop/$newCAcert》\n"
 
 openssl x509 -in "$CAtop/$newCAcert" -text

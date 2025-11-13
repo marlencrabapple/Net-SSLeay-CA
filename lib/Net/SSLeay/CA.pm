@@ -1,6 +1,7 @@
 use Object::Pad ':experimental(:all)';
 
 package Net::SSLeay::CA;
+
 class Net::SSLeay::CA;
 
 use Path::Tiny;
@@ -26,11 +27,15 @@ field $CATOP  = $$env{catop};
 field $CAKEY  = $$env{cakey};
 field $CACERT;
 field $CADAYS;
+field $CACRL;
 field $EXTENSIONS = [];
 field $CAREQ;
 field $PKCS12 = [];
+field $NEWP12;
 field $NEWKEY;
 field $NEWREQ;
+field $VERIFY;
+field $X509;
 
 field $ret : reader;
 
@@ -297,7 +302,8 @@ method verify {
     foreach my $file (@files) {
         my $status = $self->run(
             [
-                @VERIFY, "-CAfile", "$CATOP/$CACERT", $file,
+                @$VERIFY,         "-CAfile",
+                "$CATOP/$CACERT", $file,
                 $$extra{verify}->@*
             ]
         );
@@ -308,7 +314,7 @@ method verify {
 method crl {
     $ret =
       $self->run(
-        [ @CA, qw(-gencrl -out), "$CATOP/crl/$CACRL", $$extra{ca}->@* ] );
+        [ @$CA, qw(-gencrl -out), "$CATOP/crl/$CACRL", $$extra{ca}->@* ] );
     say "Generated CRL is in $CATOP/crl/$CACRL" if $ret == 0;
 }
 
@@ -324,7 +330,7 @@ method revoke ( $cmake, $crl_reason ) {
     @reason = ( "-crl_reason", $ARGV[1] )
       if defined $ARGV[1] && $self->crl_reason_ok( $ARGV[1] );
 
-    $ret = $self->run( [ @CA, "-revoke", $cname, @reason, $$extra{ca}->@* ] );
+    $ret = $self->run( [ @$CA, "-revoke", $cname, @reason, $$extra{ca}->@* ] );
 }
 
 method unknown_arg {

@@ -76,6 +76,24 @@ DISTRIBUTIONS
       Clone 0.47
     requirements:
       ExtUtils::MakeMaker 0
+  Compiler-Lexer-0.23
+    pathname: G/GO/GOCCY/Compiler-Lexer-0.23.tar.gz
+    provides:
+      Compiler::Lexer 0.23
+      Compiler::Lexer::Kind undef
+      Compiler::Lexer::SyntaxType undef
+      Compiler::Lexer::Token undef
+      Compiler::Lexer::TokenType undef
+    requirements:
+      Devel::PPPort 3.19
+      ExtUtils::CBuilder 0
+      ExtUtils::MakeMaker 6.59
+      ExtUtils::ParseXS 2.21
+      Module::Build 0.4005
+      Module::Build::XSUtil 0.19
+      Test::More 0
+      XSLoader 0.02
+      perl 5.008001
   Config-Tiny-2.30
     pathname: R/RS/RSAVAGE/Config-Tiny-2.30.tgz
     provides:
@@ -141,6 +159,19 @@ DISTRIBUTIONS
       Data::Section::Simple 0.07
     requirements:
       ExtUtils::MakeMaker 6.30
+  Devel-CheckCompiler-0.07
+    pathname: S/SY/SYOHEX/Devel-CheckCompiler-0.07.tar.gz
+    provides:
+      Devel::AssertC99 undef
+      Devel::CheckCompiler 0.07
+    requirements:
+      Exporter 0
+      ExtUtils::CBuilder 0
+      File::Temp 0
+      Module::Build::Tiny 0.035
+      Test::More 0.98
+      parent 0
+      perl 5.008001
   Devel-StackTrace-2.05
     pathname: D/DR/DROLSKY/Devel-StackTrace-2.05.tar.gz
     provides:
@@ -237,6 +268,29 @@ DISTRIBUTIONS
       perl 5.008
       strict 0
       warnings 0
+  File-Find-Rule-0.35
+    pathname: R/RC/RCLAMP/File-Find-Rule-0.35.tar.gz
+    provides:
+      File::Find::Rule 0.35
+      File::Find::Rule::Test::ATeam undef
+    requirements:
+      ExtUtils::MakeMaker 0
+      File::Find 0
+      File::Spec 0
+      Number::Compare 0
+      Test::More 0
+      Text::Glob 0.07
+  File-Find-Rule-Perl-1.16
+    pathname: E/ET/ETHER/File-Find-Rule-Perl-1.16.tar.gz
+    provides:
+      File::Find::Rule::Perl 1.16
+    requirements:
+      ExtUtils::MakeMaker 0
+      File::Find::Rule 0.20
+      File::Spec 0.82
+      Params::Util 0.38
+      Parse::CPAN::Meta 1.38
+      perl 5.006
   File-ShareDir-1.118
     pathname: R/RE/REHSACK/File-ShareDir-1.118.tar.gz
     provides:
@@ -320,6 +374,20 @@ DISTRIBUTIONS
       XS::Parse::Sublike 0.31
       XS::Parse::Sublike::Builder 0.31
       perl 5.016
+  IPC-Run-20250809.0
+    pathname: N/NJ/NJM/IPC-Run-20250809.0.tar.gz
+    provides:
+      IPC::Run 20250809.0
+      IPC::Run::Debug 20250809.0
+      IPC::Run::IO 20250809.0
+      IPC::Run::Timer 20250809.0
+      IPC::Run::Win32Helper 20250809.0
+      IPC::Run::Win32IO 20250809.0
+      IPC::Run::Win32Process 20250809.0
+      IPC::Run::Win32Pump 20250809.0
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test::More 0.47
   IPC-Run3-0.049
     pathname: R/RJ/RJBS/IPC-Run3-0.049.tar.gz
     provides:
@@ -525,6 +593,21 @@ DISTRIBUTIONS
       perl 5.006
       strict 0
       warnings 0
+  Module-Build-XSUtil-0.19
+    pathname: H/HI/HIDEAKIO/Module-Build-XSUtil-0.19.tar.gz
+    provides:
+      Module::Build::XSUtil 0.19
+    requirements:
+      Devel::CheckCompiler 0
+      Devel::PPPort 0
+      Exporter 0
+      ExtUtils::CBuilder 0
+      File::Basename 0
+      File::Path 0
+      Module::Build 0.4005
+      XSLoader 0
+      parent 0
+      perl 5.008001
   Module-CPANfile-1.1004
     pathname: M/MI/MIYAGAWA/Module-CPANfile-1.1004.tar.gz
     provides:
@@ -573,6 +656,16 @@ DISTRIBUTIONS
     requirements:
       ExtUtils::MakeMaker 0
       perl 5.006000
+  Module-Signature-0.93
+    pathname: T/TI/TIMLEGGE/Module-Signature-0.93.tar.gz
+    provides:
+      Module::Signature 0.93
+    requirements:
+      ExtUtils::MakeMaker 6.36
+      File::Temp 0
+      IO::Socket::INET 0
+      IPC::Run 0
+      Test::More 0
   Moo-2.005005
     pathname: H/HA/HAARG/Moo-2.005005.tar.gz
     provides:
@@ -613,6 +706,13 @@ DISTRIBUTIONS
       Text::Wrap 0
       constant 0
       perl 5.008001
+  Number-Compare-0.03
+    pathname: R/RC/RCLAMP/Number-Compare-0.03.tar.gz
+    provides:
+      Number::Compare 0.03
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test::More 0
   Object-Pad-0.821
     pathname: P/PE/PEVANS/Object-Pad-0.821.tar.gz
     provides:
@@ -632,101 +732,101 @@ DISTRIBUTIONS
       XS::Parse::Sublike 0.35
       XS::Parse::Sublike::Builder 0.35
       perl 5.018
-  PPI-1.283
-    pathname: M/MI/MITHALDU/PPI-1.283.tar.gz
+  PPI-1.284
+    pathname: O/OA/OALDERS/PPI-1.284.tar.gz
     provides:
-      PPI 1.283
-      PPI::Cache 1.283
-      PPI::Document 1.283
-      PPI::Document::File 1.283
-      PPI::Document::Fragment 1.283
-      PPI::Document::Normalized 1.283
-      PPI::Dumper 1.283
-      PPI::Element 1.283
-      PPI::Exception 1.283
-      PPI::Exception::ParserRejection 1.283
-      PPI::Find 1.283
-      PPI::Lexer 1.283
-      PPI::Node 1.283
-      PPI::Normal 1.283
-      PPI::Normal::Standard 1.283
-      PPI::Singletons 1.283
-      PPI::Statement 1.283
-      PPI::Statement::Break 1.283
-      PPI::Statement::Compound 1.283
-      PPI::Statement::Data 1.283
-      PPI::Statement::End 1.283
-      PPI::Statement::Expression 1.283
-      PPI::Statement::Given 1.283
-      PPI::Statement::Include 1.283
-      PPI::Statement::Include::Perl6 1.283
-      PPI::Statement::Null 1.283
-      PPI::Statement::Package 1.283
-      PPI::Statement::Scheduled 1.283
-      PPI::Statement::Sub 1.283
-      PPI::Statement::Unknown 1.283
-      PPI::Statement::UnmatchedBrace 1.283
-      PPI::Statement::Variable 1.283
-      PPI::Statement::When 1.283
-      PPI::Structure 1.283
-      PPI::Structure::Block 1.283
-      PPI::Structure::Condition 1.283
-      PPI::Structure::Constructor 1.283
-      PPI::Structure::For 1.283
-      PPI::Structure::Given 1.283
-      PPI::Structure::List 1.283
-      PPI::Structure::Signature 1.283
-      PPI::Structure::Subscript 1.283
-      PPI::Structure::Unknown 1.283
-      PPI::Structure::When 1.283
-      PPI::Token 1.283
-      PPI::Token::ArrayIndex 1.283
-      PPI::Token::Attribute 1.283
-      PPI::Token::BOM 1.283
-      PPI::Token::Cast 1.283
-      PPI::Token::Comment 1.283
-      PPI::Token::DashedWord 1.283
-      PPI::Token::Data 1.283
-      PPI::Token::End 1.283
-      PPI::Token::HereDoc 1.283
-      PPI::Token::Label 1.283
-      PPI::Token::Magic 1.283
-      PPI::Token::Number 1.283
-      PPI::Token::Number::Binary 1.283
-      PPI::Token::Number::Exp 1.283
-      PPI::Token::Number::Float 1.283
-      PPI::Token::Number::Hex 1.283
-      PPI::Token::Number::Octal 1.283
-      PPI::Token::Number::Version 1.283
-      PPI::Token::Operator 1.283
-      PPI::Token::Pod 1.283
-      PPI::Token::Prototype 1.283
-      PPI::Token::Quote 1.283
-      PPI::Token::Quote::Double 1.283
-      PPI::Token::Quote::Interpolate 1.283
-      PPI::Token::Quote::Literal 1.283
-      PPI::Token::Quote::Single 1.283
-      PPI::Token::QuoteLike 1.283
-      PPI::Token::QuoteLike::Backtick 1.283
-      PPI::Token::QuoteLike::Command 1.283
-      PPI::Token::QuoteLike::Readline 1.283
-      PPI::Token::QuoteLike::Regexp 1.283
-      PPI::Token::QuoteLike::Words 1.283
-      PPI::Token::Regexp 1.283
-      PPI::Token::Regexp::Match 1.283
-      PPI::Token::Regexp::Substitute 1.283
-      PPI::Token::Regexp::Transliterate 1.283
-      PPI::Token::Separator 1.283
-      PPI::Token::Structure 1.283
-      PPI::Token::Symbol 1.283
-      PPI::Token::Unknown 1.283
-      PPI::Token::Whitespace 1.283
-      PPI::Token::Word 1.283
-      PPI::Tokenizer 1.283
-      PPI::Transform 1.283
-      PPI::Transform::UpdateCopyright 1.283
-      PPI::Util 1.283
-      PPI::XSAccessor 1.283
+      PPI 1.284
+      PPI::Cache 1.284
+      PPI::Document 1.284
+      PPI::Document::File 1.284
+      PPI::Document::Fragment 1.284
+      PPI::Document::Normalized 1.284
+      PPI::Dumper 1.284
+      PPI::Element 1.284
+      PPI::Exception 1.284
+      PPI::Exception::ParserRejection 1.284
+      PPI::Find 1.284
+      PPI::Lexer 1.284
+      PPI::Node 1.284
+      PPI::Normal 1.284
+      PPI::Normal::Standard 1.284
+      PPI::Singletons 1.284
+      PPI::Statement 1.284
+      PPI::Statement::Break 1.284
+      PPI::Statement::Compound 1.284
+      PPI::Statement::Data 1.284
+      PPI::Statement::End 1.284
+      PPI::Statement::Expression 1.284
+      PPI::Statement::Given 1.284
+      PPI::Statement::Include 1.284
+      PPI::Statement::Include::Perl6 1.284
+      PPI::Statement::Null 1.284
+      PPI::Statement::Package 1.284
+      PPI::Statement::Scheduled 1.284
+      PPI::Statement::Sub 1.284
+      PPI::Statement::Unknown 1.284
+      PPI::Statement::UnmatchedBrace 1.284
+      PPI::Statement::Variable 1.284
+      PPI::Statement::When 1.284
+      PPI::Structure 1.284
+      PPI::Structure::Block 1.284
+      PPI::Structure::Condition 1.284
+      PPI::Structure::Constructor 1.284
+      PPI::Structure::For 1.284
+      PPI::Structure::Given 1.284
+      PPI::Structure::List 1.284
+      PPI::Structure::Signature 1.284
+      PPI::Structure::Subscript 1.284
+      PPI::Structure::Unknown 1.284
+      PPI::Structure::When 1.284
+      PPI::Token 1.284
+      PPI::Token::ArrayIndex 1.284
+      PPI::Token::Attribute 1.284
+      PPI::Token::BOM 1.284
+      PPI::Token::Cast 1.284
+      PPI::Token::Comment 1.284
+      PPI::Token::DashedWord 1.284
+      PPI::Token::Data 1.284
+      PPI::Token::End 1.284
+      PPI::Token::HereDoc 1.284
+      PPI::Token::Label 1.284
+      PPI::Token::Magic 1.284
+      PPI::Token::Number 1.284
+      PPI::Token::Number::Binary 1.284
+      PPI::Token::Number::Exp 1.284
+      PPI::Token::Number::Float 1.284
+      PPI::Token::Number::Hex 1.284
+      PPI::Token::Number::Octal 1.284
+      PPI::Token::Number::Version 1.284
+      PPI::Token::Operator 1.284
+      PPI::Token::Pod 1.284
+      PPI::Token::Prototype 1.284
+      PPI::Token::Quote 1.284
+      PPI::Token::Quote::Double 1.284
+      PPI::Token::Quote::Interpolate 1.284
+      PPI::Token::Quote::Literal 1.284
+      PPI::Token::Quote::Single 1.284
+      PPI::Token::QuoteLike 1.284
+      PPI::Token::QuoteLike::Backtick 1.284
+      PPI::Token::QuoteLike::Command 1.284
+      PPI::Token::QuoteLike::Readline 1.284
+      PPI::Token::QuoteLike::Regexp 1.284
+      PPI::Token::QuoteLike::Words 1.284
+      PPI::Token::Regexp 1.284
+      PPI::Token::Regexp::Match 1.284
+      PPI::Token::Regexp::Substitute 1.284
+      PPI::Token::Regexp::Transliterate 1.284
+      PPI::Token::Separator 1.284
+      PPI::Token::Structure 1.284
+      PPI::Token::Symbol 1.284
+      PPI::Token::Unknown 1.284
+      PPI::Token::Whitespace 1.284
+      PPI::Token::Word 1.284
+      PPI::Tokenizer 1.284
+      PPI::Transform 1.284
+      PPI::Transform::UpdateCopyright 1.284
+      PPI::Util 1.284
+      PPI::XSAccessor 1.284
     requirements:
       Carp 0
       Clone 0.30
@@ -1178,6 +1278,14 @@ DISTRIBUTIONS
       strict 0
       version 0.77
       warnings 0
+  Perl-MinimumVersion-Fast-0.22
+    pathname: B/BD/BDFOY/Perl-MinimumVersion-Fast-0.22.tar.gz
+    provides:
+      Perl::MinimumVersion::Fast 0.22
+    requirements:
+      Compiler::Lexer 0.23
+      Module::Build::Tiny 0.035
+      perl 5.008005
   Perl-Tidy-20250912
     pathname: S/SH/SHANCOCK/Perl-Tidy-20250912.tar.gz
     provides:
@@ -1267,6 +1375,50 @@ DISTRIBUTIONS
     requirements:
       Module::Build::Tiny 0.035
       perl 5.005
+  Regexp-Common-2024080801
+    pathname: A/AB/ABIGAIL/Regexp-Common-2024080801.tar.gz
+    provides:
+      Regexp::Common 2024080801
+      Regexp::Common::CC 2024080801
+      Regexp::Common::Entry 2024080801
+      Regexp::Common::SEN 2024080801
+      Regexp::Common::URI 2024080801
+      Regexp::Common::URI::RFC1035 2024080801
+      Regexp::Common::URI::RFC1738 2024080801
+      Regexp::Common::URI::RFC1808 2024080801
+      Regexp::Common::URI::RFC2384 2024080801
+      Regexp::Common::URI::RFC2396 2024080801
+      Regexp::Common::URI::RFC2806 2024080801
+      Regexp::Common::URI::fax 2024080801
+      Regexp::Common::URI::file 2024080801
+      Regexp::Common::URI::ftp 2024080801
+      Regexp::Common::URI::gopher 2024080801
+      Regexp::Common::URI::http 2024080801
+      Regexp::Common::URI::news 2024080801
+      Regexp::Common::URI::pop 2024080801
+      Regexp::Common::URI::prospero 2024080801
+      Regexp::Common::URI::tel 2024080801
+      Regexp::Common::URI::telnet 2024080801
+      Regexp::Common::URI::tv 2024080801
+      Regexp::Common::URI::wais 2024080801
+      Regexp::Common::_support 2024080801
+      Regexp::Common::balanced 2024080801
+      Regexp::Common::comment 2024080801
+      Regexp::Common::delimited 2024080801
+      Regexp::Common::lingua 2024080801
+      Regexp::Common::list 2024080801
+      Regexp::Common::net 2024080801
+      Regexp::Common::number 2024080801
+      Regexp::Common::profanity 2024080801
+      Regexp::Common::whitespace 2024080801
+      Regexp::Common::zip 2024080801
+    requirements:
+      Config 0
+      ExtUtils::MakeMaker 0
+      perl 5.010
+      strict 0
+      vars 0
+      warnings 0
   Role-Tiny-2.002004
     pathname: H/HA/HAARG/Role-Tiny-2.002004.tar.gz
     provides:
@@ -1345,6 +1497,27 @@ DISTRIBUTIONS
       strict 0
       utf8 0
       warnings 0
+  Spellunker-v0.4.0
+    pathname: T/TO/TOKUHIROM/Spellunker-v0.4.0.tar.gz
+    provides:
+      Spellunker v0.4.0
+      Spellunker::CLI undef
+      Spellunker::CLI::Pod v0.4.0
+      Spellunker::Pod undef
+      Spellunker::Pod::Parser undef
+      Test::Spellunker v0.4.0
+    requirements:
+      CPAN::Meta 0
+      CPAN::Meta::Prereqs 0
+      File::ShareDir 1.00
+      Getopt::Long 0
+      Module::Build 0.38
+      Pod::Simple 3.26
+      Regexp::Common 0
+      Test::Builder 0
+      parent 0
+      perl 5.008001
+      version 0
   String-Format-1.18
     pathname: S/SR/SREZIC/String-Format-1.18.tar.gz
     provides:
@@ -1458,18 +1631,46 @@ DISTRIBUTIONS
       Scalar::Util 1.14
       perl 5.006
       strict 0
-  Test-Fatal-0.017
-    pathname: R/RJ/RJBS/Test-Fatal-0.017.tar.gz
+  Test-CPAN-Meta-0.25
+    pathname: B/BA/BARBIE/Test-CPAN-Meta-0.25.tar.gz
     provides:
-      Test::Fatal 0.017
+      Test::CPAN::Meta 0.25
+      Test::CPAN::Meta::Version 0.25
+    requirements:
+      ExtUtils::MakeMaker 0
+      IO::File 0
+      Parse::CPAN::Meta 0.02
+      Test::Builder 0
+      Test::Builder::Tester 0
+      Test::More 0.70
+  Test-Fatal-0.018
+    pathname: R/RJ/RJBS/Test-Fatal-0.018.tar.gz
+    provides:
+      Test::Fatal 0.018
     requirements:
       Carp 0
       Exporter 5.57
       ExtUtils::MakeMaker 6.78
       Test::Builder 0
       Try::Tiny 0.07
-      strict 0
+      perl 5.012
       warnings 0
+  Test-MinimumVersion-Fast-0.04
+    pathname: T/TO/TOKUHIROM/Test-MinimumVersion-Fast-0.04.tar.gz
+    provides:
+      Test::MinimumVersion::Fast 0.04
+    requirements:
+      CPAN::Meta 0
+      CPAN::Meta::Prereqs 0
+      File::Find::Rule 0
+      File::Find::Rule::Perl 0
+      Module::Build 0.38
+      Perl::MinimumVersion::Fast 0.14
+      Test::Builder 0
+      YAML::Tiny 1.40
+      parent 0
+      perl 5.008005
+      version 0.70
   Test-Number-Delta-1.06
     pathname: D/DA/DAGOLDEN/Test-Number-Delta-1.06.tar.gz
     provides:
@@ -1483,6 +1684,17 @@ DISTRIBUTIONS
       strict 0
       vars 0
       warnings 0
+  Test-Pod-1.52
+    pathname: E/ET/ETHER/Test-Pod-1.52.tar.gz
+    provides:
+      Test::Pod 1.52
+    requirements:
+      ExtUtils::MakeMaker 0
+      File::Find 0
+      Pod::Simple 3.05
+      Test::Builder::Tester 1.02
+      Test::More 0.62
+      perl 5.008
   Test-Requires-0.11
     pathname: T/TO/TOKUHIROM/Test-Requires-0.11.tar.gz
     provides:
@@ -1706,6 +1918,15 @@ DISTRIBUTIONS
       overload 0
       perl 5.006002
       utf8 0
+  Text-Glob-0.11
+    pathname: R/RC/RCLAMP/Text-Glob-0.11.tar.gz
+    provides:
+      Text::Glob 0.11
+    requirements:
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      constant 0
+      perl 5.005030
   Text-MicroTemplate-0.24
     pathname: K/KA/KAZUHO/Text-MicroTemplate-0.24.tar.gz
     provides:
@@ -1747,11 +1968,11 @@ DISTRIBUTIONS
       Time::HiRes 0
       XSLoader 0.02
       perl 5.008001
-  Time-Piece-1.39
-    pathname: E/ES/ESAYM/Time-Piece-1.39.tar.gz
+  Time-Piece-1.41
+    pathname: E/ES/ESAYM/Time-Piece-1.41.tar.gz
     provides:
-      Time::Piece 1.39
-      Time::Seconds 1.39
+      Time::Piece 1.41
+      Time::Seconds 1.41
     requirements:
       Exporter 5.57
       ExtUtils::MakeMaker 0
@@ -1937,6 +2158,20 @@ DISTRIBUTIONS
       constant 0
       overload 0
       perl 5.008000
+      strict 0
+      warnings 0
+  YAML-Tiny-1.76
+    pathname: E/ET/ETHER/YAML-Tiny-1.76.tar.gz
+    provides:
+      YAML::Tiny 1.76
+    requirements:
+      B 0
+      Carp 0
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      Fcntl 0
+      Scalar::Util 0
+      perl 5.008001
       strict 0
       warnings 0
   common-sense-3.75

@@ -35,6 +35,9 @@
          "requires" : {
             "App::FatPacker" : "0",
             "Minilla" : "0",
+            "Module::Build" : "0",
+            "Module::Build::Tiny" : "0",
+            "Module::Signature" : "0",
             "Perl::Critic" : "0",
             "Perl::Tidy" : "0",
             "Software::License" : "0",
@@ -71,7 +74,11 @@
       "test" : {
          "requires" : {
             "Module::Build::Tiny" : "0",
-            "Test::More" : "0.98"
+            "Test::CPAN::Meta" : "0",
+            "Test::MinimumVersion::Fast" : "0",
+            "Test::More" : "0.98",
+            "Test::Pod" : "0",
+            "Test::Spellunker" : "0"
          }
       }
    },

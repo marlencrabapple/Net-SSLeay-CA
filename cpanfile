@@ -20,6 +20,10 @@ requires 'Const::Fast::Exporter';
 on 'test' => sub {
     requires 'Module::Build::Tiny';
     requires 'Test::More', '0.98';
+    requires 'Test::CPAN::Meta';
+    requires 'Test::MinimumVersion::Fast';
+    requires 'Test::Pod';
+    requires 'Test::Spellunker';
 };
 
 on 'develop' => sub {
@@ -29,4 +33,7 @@ on 'develop' => sub {
     requires 'App::FatPacker';
     requires 'inc::latest';
     requires 'Software::License';
+    requires 'Module::Build';
+    requires 'Module::Build::Tiny';
+    requires 'Module::Signature';
 }

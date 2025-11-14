@@ -2,9 +2,9 @@ use Object::Pad ':experimental(:all)';
 
 package Net::SSLeay::CA::SAN;
 
-class Net::SSLeay::CA::SAN : isa(Net::SSLeay::CA::Base);
+class Net::SSLeay::CA::SAN : does(Net::SSLeay::CA::Base);
 
-use utf8; 
+use utf8;
 use v5.40;
 
 # use Net::SSLeay;
@@ -21,8 +21,8 @@ field $othername = [];
 # constructor basically, takes an href containing any of the above fields
 method toSAN : common ($fields, %opts) {
     my $self =
-        $class->new( %$fields{qw(uri ip email dns rid dirnamee othername)} );
-    $self
+      $class->new( %$fields{qw(uri ip email dns rid dirnamee othername)} );
+    $self;
 }
 
 # interface compatible with thsi config format (r/w hopefully)

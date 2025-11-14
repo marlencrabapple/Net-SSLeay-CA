@@ -2,7 +2,7 @@ use Object::Pad ':experimental(:all)';
 
 package Net::SSLeay::CA::Base;
 
-class Net::SSLeay::CA::Base : abstract;
+role Net::SSLeay::CA::Base;
 
 use utf8;
 use v5.40;
@@ -19,15 +19,16 @@ use parent 'Exporter';
 use Exporter 'import';
 
 use vars qw'@ISA @EXPORT';
-use subs qw(dmsg epoch err);
 
-@ISA    = qw(Exporter);
+# use subs qw(dmsg epoch err);
+
+# @ISA    = qw(Exporter);
 @EXPORT = qw(dmsg epoch err);
 
 const our $DEBUG        => $ENV{DEBUG} // 0;
 const our $S_UNKNOWNERR => 'Unknown fatal error';
 
-# eval "use Devel::StackTrace::WithLexicals" if $DEBUG;
+eval "use Devel::StackTrace::WithLexicals" if $DEBUG;
 
 # field $env : param(runenv) : inheritable {
 #     (
@@ -41,13 +42,13 @@ const our $S_UNKNOWNERR => 'Unknown fatal error';
 # }
 # field $debug : accessor : param = $DEBUG;
 
-# APPLY($mop) {
-#     use utf8;
-#     use v5.40;
+APPLY($mop) {
+    use utf8;
+    use v5.40;
 
-#     use Exporter 'import';
-#     our @EXPORT = @{__PACKAGE__::EXPORT}
-# };
+    use Exporter 'import';
+    our @EXPORT = @{__PACKAGE__::EXPORT::}
+}
 
 # ADJUSTPARAMS($param) {
 #     use utf8;

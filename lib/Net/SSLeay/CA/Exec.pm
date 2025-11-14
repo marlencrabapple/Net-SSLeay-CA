@@ -2,16 +2,13 @@ use Object::Pad ':experimental(:all)';
 
 package Net::SSLeay::CA::Exec;
 
-class Net::SSLeay::CA::Exec;
+class Net::SSLeay::CA::Exec : does(Net::SSLeay::CA::Base);
 
 use utf8;
 use v5.40;
 
-# BEGIN {
-#     *exec = \&run;
-# }
-
 use List::Util 'first';
+
 field $out     : reader = [];
 field $err     : reader = [];
 field $status  : reader;

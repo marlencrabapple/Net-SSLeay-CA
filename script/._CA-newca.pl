@@ -24,14 +24,10 @@ use List::Util 'any';
 #does(Net::SSLeay::CA::Exec);
 # field $fffffffffffffff
 
-
-
 field $argv    : param = \@ARGV;
 field $clispec : param(setup);
 field $cliopt  : param(dest);
 field $env;
-
-
 
 sub writeh ( $line, $handle = *STDIN, %opts ) {
     chomp $line;
@@ -49,18 +45,18 @@ method $errh ( $line, %opts ) {
     push @$out, $line;
 }
 
-
 method genpkey ( $outf, $type, %opts ) {
 
-$self->genpkey_pass($$opts{pwlen}, %opts) unless $opts{no_pass} // $opts{pass}
+    $self->genpkey_pass( $$opts{pwlen}, %opts )
+      unless $opts{no_pass} // $opts{pass}
 
-    run3(
+      run3(
         [
             qw(openssl genpkey -algorithm), $type,
             '-pkeyopt',                     join ':',
             %opts{bits},                    '-pass',
         ]
-    );
+      );
 }
 
 method genpkey_pass( $len, %opts ) {
@@ -84,6 +80,14 @@ method $run (%opts) {
 }
 
 method run : common ($argv = \@ARGV, $dest =  {}, %opts) {
-  my ($self, $res) = $class->new(argv => $argv, dest => $dest)->$run(%opts)
-  Net::SSLeay::CA::Base::dmsg({ self => $self, res => $res, argv => $argv, opts => \%opts dest => $dest})
+    my ( $self, $res ) =
+      $class->new( argv => $argv, dest => $dest )->$run(%opts)
+      Net::SSLeay::CA::Base::dmsg(
+        {
+            self => $self,
+            res  => $res,
+            argv => $argv,
+            opts => \%opts dest => $dest
+        }
+      );
 }

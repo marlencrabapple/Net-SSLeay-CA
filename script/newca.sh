@@ -8,7 +8,7 @@ for path in "$CAtop"/{private,newcert,crl,certs,db}; do
 done
 
 [[ -f "$CAtop/db/index" ]] || touch "$CAtop/db/index"
-[[ -f "$CAtop/db/serial" ]] || openssl rand -hex 16 > ca/db/serial
+[[ -f "$CAtop/db/serial" ]] || openssl rand -hex 16 > "$CAtop/db/serial"
 
 signingCA="$SIGNINGCA"
 signingCA_key="$SIGNINGCA_KEY"

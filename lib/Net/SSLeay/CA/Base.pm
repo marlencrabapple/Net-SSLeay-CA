@@ -15,14 +15,14 @@ use List::Util 'first';
 use Syntax::Keyword::Dynamically;
 use Const::Fast;    #::Exporter;
 
-# use parent 'Exporter';
-# use Exporter 'import';
+use parent 'Exporter';
+use Exporter 'import';
 
-# use vars qw'@ISA @EXPORT';
-# use subs qw(dmsg epoch err);
+use vars qw'@ISA @EXPORT';
+use subs qw(dmsg epoch err);
 
-# @ISA    = qw(Exporter);
-# @EXPORT = qw(dmsg epoch err);
+@ISA    = qw(Exporter);
+@EXPORT = qw(dmsg epoch err);
 
 const our $DEBUG        => $ENV{DEBUG} // 0;
 const our $S_UNKNOWNERR => 'Unknown fatal error';

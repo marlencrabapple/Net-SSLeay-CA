@@ -55,8 +55,8 @@ method $errh ( $line, %opts ) {
 sub exec (
     $cmd_aref,
     $inh  = \undef,
-    $outh = sub ( $self, $line ) { ... },
-    $errh = sub ( $self, $line ) { ... }, %opts
+    $outh = sub ( $self, $line ) { $self->$outh($line) },
+    $errh = sub ( $self, $line ) { $self->$errh($line) }, %opts
   )
 {
     my $exec = Net::SSLeay::CA::Exec->new;

@@ -16,7 +16,7 @@ requires 'Devel::StackTrace::WithLexicals';
 requires 'Time::Piece';
 requires 'Time::Moment';
 requires 'Const::Fast::Exporter';
-
+requires 'File::chdir';
 on 'test' => sub {
     requires 'Module::Build::Tiny';
     requires 'Test::More', '0.98';

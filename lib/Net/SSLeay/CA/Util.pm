@@ -2,7 +2,7 @@ use Object::Pad ':experimental(:all)';
 
 package Net::SSLeay::CA::Util;
 
-class Net::SSLeay::CA::Util : isa(Net::SSLeay::CA::Base);
+class Net::SSLeay::CA::Util : does(Net::SSLeay::CA::Base);
 
 use utf8;
 use v5.40;

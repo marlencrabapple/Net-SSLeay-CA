@@ -2,7 +2,8 @@ use Object::Pad ':experimental(:all)';
 
 package Net::SSLeay::CA;
 
-class Net::SSLeay::CA : does(Net::SSLeay::CA::Base);
+class Net::SSLeay::CA : does(Net::SSLeay::CA::Config) :
+  does(Net::SSLeay::CA::Base);
 
 use Path::Tiny;
 use Net::SSLeay;

@@ -19,7 +19,7 @@ field $dirname   = [];
 field $othername = [];
 
 # constructor basically, takes an href containing any of the above fields
-method toSAN : common ($fields, %opts) {
+method to_SAN : common ($fields, %opts) {
     my $self =
       $class->new( %$fields{qw(uri ip email dns rid dirnamee othername)} );
     $self;

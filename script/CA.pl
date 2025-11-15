@@ -7,23 +7,18 @@ package CA;
 use lib 'lib';
 
 class CA : isa(Net::SSLeay::CA);
-inherit Net::SSLeay::CA '$env';
+
+#inherit Net::SSLeay::CA '$env';
 
 use utf8;
 use v5.40;
 
-Getopt::Long qw'GetOptionsFromArray :config  auto_abbrev';
+use Getopt::Long qw'GetOptionsFromArray :config  auto_abbrev';
 
 use Net::SSLeay::CA::Util;
 
 field $argv = [];
 field $cliopts : param(dest) = {};
-
-ADJUSTPARAMS($params) {
-    ADJUST {
-        $env->%{ keys %$cliopts } = values %$cliopts
-    }
-}
 
 method $run (%opts) {
 

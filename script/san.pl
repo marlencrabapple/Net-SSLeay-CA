@@ -23,7 +23,7 @@ method $run {
 
 }
 
-method run ( $argv = \@ARGV, %opts ) {
+method run : common ( $argv = \@ARGV, %opts ) {
 
 }
 

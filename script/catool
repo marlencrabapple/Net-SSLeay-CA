@@ -68,7 +68,7 @@ sub exec (
 package Net::SSLeay::CA::catool;
 use lib 'lib';
 
-class Net::SSLeay::CA::catool : isa(Net::SSLeay::CA::Base)
+class Net::SSLeay::CA::catool : does(Net::SSLeay::CA::Base)
   : abstract;    # : does(Net::SSLeay::CA);
 
 use utf8;

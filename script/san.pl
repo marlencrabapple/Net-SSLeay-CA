@@ -20,13 +20,17 @@ ADJUSTPARAMS($params) {
 }
 
 method $run {
+    $;;
 
 }
 
 method run : common ( $argv = \@ARGV, %opts ) {
-
+    my $self = $class->new( %$argv, %opts );
+    Net::SSLeay::CA::Common::dmsg( { self => $Self } );
 }
 
 package main;
 
-santest->new(@ARGV)
+santest->run
+
+  #santest->new(@ARGV)

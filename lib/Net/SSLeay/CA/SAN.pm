@@ -18,6 +18,9 @@ field $rid       = [];
 field $dirname   = [];
 field $othername = [];
 
+ADJUST : params (:$uri, :$ip, :$email, :$dns, :$rid, :$dirname, :$othername )
+  {...};
+
 # constructor basically, takes an href containing any of the above fields
 method to_SAN : common ($fields, %opts) {
     my $self =

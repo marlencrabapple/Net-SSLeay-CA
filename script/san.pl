@@ -4,11 +4,9 @@ use Object::Pad ':experimental(:all)';
 use utf8;
 use v5.40;
 
-package santest;
-
 use lib 'lib';
 
-#use Net::SSLeay::CA::SAN;
+package santest;
 
 class santest : isa(Net::SSLeay::CA::SAN);
 
@@ -20,13 +18,13 @@ ADJUSTPARAMS($params) {
 }
 
 method $run {
-    $;;
-
+    ...    #$
 }
 
 method run : common ( $argv = \@ARGV, %opts ) {
     my $self = $class->new( %$argv, %opts );
-    Net::SSLeay::CA::Common::dmsg( { self => $Self } );
+    Net::SSLeay::CA::Common::dmsg( { self => $self } );
+    $self->$run;
 }
 
 package main;

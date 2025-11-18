@@ -7,6 +7,9 @@ class Net::SSLeay::CA::SAN : does(Net::SSLeay::CA::Base);
 use utf8;
 use v5.40;
 
+use URI;
+use Socket;
+
 # use Net::SSLeay;
 # use Net::SSLeay::CA::Util;
 
@@ -18,8 +21,9 @@ field $rid       = [];
 field $dirname   = [];
 field $othername = [];
 
-ADJUST : params (:$uri, :$ip, :$email, :$dns, :$rid, :$dirname, :$othername )
-  {...};
+ADJUST : params (:$uri, :$ip, :$email, :$dns, :$rid, :$dirname, :$othername ) {
+
+};
 
 # constructor basically, takes an href containing any of the above fields
 method to_SAN : common ($fields, %opts) {

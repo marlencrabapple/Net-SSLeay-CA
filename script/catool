@@ -1,75 +1,10 @@
 #!/usr/bin/env perl
 use Object::Pad ':experimental(:all)';
 
-package Net::SSLeay::CA::Exec;
-
-class Net::SSLeay::CA::Exec;
-
-use utf8;
-use v5.40;
-
-use vars '@EXPORT';
-
-@EXPORT = qw(exec);
-
-use parent 'Exporter';
-
-use IPC::Run3;
-use List::Util 'any';
-
-field $cmd_aref : param;
-field $outbuff  : param = [];
-field $errbuff  : param = [];
-field $status;
-field $err;
-
-sub writeh ( $line, $handle = *STDIN, %opts ) {
-    chomp $line;
-
-    $line = "《Info》" if any { $opts{$_} == 1 } qw(info notice help);
-    $line = "▶ $line"
-      if any { $opts{$_} == 1 } qw(plain say print arrow right_arrow);
-    $line = "❌️ $line " if any { $opts{$_} == 1 } qw(error fatal die);
-    $line = "‼️ $line"  if any { $opts{$_} == 1 } qw(warn warning danger);
-
-    say $handle->$ $line unless $opts{quiet};
-
-    $line;
-}
-
-method fatal ( $err, $status = 255, %opts ) {
-    writeh( $err, *STDERR, %opts );
-}
-
-method $outh ( $line, %opts ) {
-
-    writeh( $line, %opts );
-    push @$outbuff, $line;
-}
-
-method $errh ( $line, %opts ) {
-    writeh( "$line", %opts );
-    push @$errbuff, $line;
-}
-
-sub exec (
-    $cmd_aref,
-    $inh  = \undef,
-    $outh = sub ( $self, $line ) { $self->$outh($line) },
-    $errh = sub ( $self, $line ) { $self->$errh($line) }, %opts
-  )
-{
-    my $exec = Net::SSLeay::CA::Exec->new;
-    my $run3 = $exec->run3( $cmd_aref, $inh, $outh, $errh );
-    fatal( "Unknown error occured while trying to run external command:\n"
-          . join " @$cmd_aref" );
-}
-
 package Net::SSLeay::CA::catool;
 use lib 'lib';
 
-class Net::SSLeay::CA::catool : does(Net::SSLeay::CA::Base)
-  : abstract;    # : does(Net::SSLeay::CA);
+class Net::SSLeay::CA::catool : does(Net::SSLeay::CA::Base);
 
 use utf8;
 use v5.40;
@@ -80,9 +15,10 @@ use Time::Moment;
 use Net::SSLeay;
 use Getopt::Long;
 use Path::Tiny;
-use IPC::Run3;
 use Net::Domain;
 use List::Util 'any';
+use Net::SSLeay::CA::Exec;
+use Net::SSLeay::CA::SAN;
 
 #const our @CA_HEIRARCHY_RANK = qw(q);
 field $openssl;
@@ -112,43 +48,93 @@ field $CArev;
 field $hostfqdn  = Net::Domain::hostfqdn;
 field $localuser = `whoami`;
 
-field $subj = (
-    class {
-        field $cn : param;
-        field $o  : param;
-        field $ou : param;
-    }
-)->new(
-    cn => "$localuser@$hostfqdn $CArank CA 《$keyalgo$keybits✖$CArev》",
-    o  => "$hostfqdn",
-    ou => "Local User"
-);
+my class Subject {
+    field $cn : param;
+    field $o  : param;
+    field $ou : param;
+};
 
-method run : common ($argv = \@ARGV) {
-    my ( $self, $cliopts ) = $class->new->cliopts(
-        argv    => $argv,
-        optspec => {
-            'CAcert=s',
-            'CAkey=s',
-            'signingCAcert=s',
-            'signingCAkey=s',
-            'CAcsr', 'days',
-            'keyalgo',
-            'keybits',
-            'san|subject-alternative-name|',
+field $subj : reader {
+    Subject->new(
+        cn => "$localuser@$hostfqdn $CArank CA 《$keyalgo$keybits✖$CArev》",
+        o  => "$hostfqdn",
+        ou => "Local User"
+    )
+}
+
+ADJUST : params ( :$asdf, :$fdsas ) {
+
+};
+
+method run : common ($argv = \@ARGV, %opts) {
+    my $catool = $class->new;
+    my $dest   = $opts{dest} //= {};
+
+    dmsg( $argv, \%opts, $catool, $dest );
+
+    my $cli = $catool->cli;
+
+    my %clicommon = (
+        qr/openssl-config/                          => 's',
+        qr/s(ubj(ect)?)?-?a(lt(ernate)?)?-?n(ame)?/ => 's'
+    );
+
+    $cli->command(
+        'qr/new-?ca/i' => [
+            qr/(common->name|cn)/ =>
+        ]
+    );
+
+    $catool->cli(
+        $argv, $dest,
+        {
+            'CAcert|cacert|ca-certfile=s',
+            'CAkey|cakey|ca-keyfile=s',
+            'signingCAcert|signing-ca-certfile=s',
+            'signingCAkey|signing-ca-keyfile=s',
+            'CAcsr|csr|ca-csr',
+            'CAclass|ca-class|class|CArank|ca-rank|rank=s',
+            'subject=h%',
+            'commonname|cn|common-name',
+            'org|organization',
+            'ou|organizational-unit|',
+            'days|daysvalid|days-valid=s',
+            'keyalgo|key-algorithm=s',
+            'keybits|key-bits=s',
+            'san|SAN|subject-alternative-name|subj-alt-name|subjaltname=s',
             '<>' => sub ( $self, $barearg ) {
                 if ( my $field = $class->isvalid($barearg) ) {
-                    $self->addfield($field)
+                    $self->subj->addfield($field)
                       // fatal(
                         "Error processing '$field' as a valid SAN value");
                 }
-            }
-        }
+            },
+            $opts{spec}->@*
+        },
+        %opts
     );
+}
+
+method $CAclass : lvalue ($class) {
+    $CArank;
 }
 
 method genpkey ( $algo, $bits, %opts ) {
 
+    # pkeyconf = ( "$keyalgo" "bits:$keybits" )
+
+    #   openssl genpkey -algorithm "${pkeyconf[*]:0:1}" -
+    #   pkeyopt "${pkeyconf[*]:1:1}" \-out "$CAtop/private/$newCAkey"
+
+    # -pass "pass:$(pass generate \
+    #     -n "$newCAbase/$newCAkey" 128 &&-
+    #     pass show "Net::SSLeay::CA/$newCAkey" |
+    #     head -n 1)" \
+    # -out "$newCAkey"
+
+    my $pw = ( `pwgen -s 64` =~ s/[\n\r]+//rg );
+
+    exec( [@$openssl] );
 }
 
 method signCA {
@@ -166,7 +152,7 @@ method selfsignCA {
     #   "/CN=$cnsubj/O=$hostfqdn/OU=Local User/C=US/" \-key "$newCAkey" -
     #   days 3652`
 
-    exec(
+    Net::SSLeay::CA::Exec->exec(
         [
             @$openssl,            qw(x509 -req -in),
             "$CAtop/$newCAcsr",   qw(copy_extensions copyall -out),
@@ -189,8 +175,14 @@ method x509toCA () {
 
 }
 
+method cli( $argv, $dest, $spec, %opts ) {
+    GetOptionsFromArray( $argv, $dest, @$spec );
+}
+
 package catool;
 
 sub run {
-    Net::SSLeay::CA::catool->new( argv => \@ARGV );
+    Net::SSLeay::CA::catool->run( \@ARGV );
 }
+
+run

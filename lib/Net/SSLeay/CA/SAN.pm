@@ -26,15 +26,15 @@ ADJUST : params (:$uri, :$ip, :$email, :$dns, :$rid, :$dirname, :$othername ) {
 };
 
 # constructor basically, takes an href containing any of the above fields
-method to_SAN : common ($fields, %opts) {
-    my $self =
-      $class->new( %$fields{qw(uri ip email dns rid dirnamee othername)} );
-    $self;
-}
+# method to_SAN : common ($fields, %opts) {
+#     my $self =
+#       $class->new( %$fields{qw(uri ip email dns rid dirnamee othername)} );
+#     $self;
+# }
 
 # interface compatible with thsi config format (r/w hopefully)
 method mutlivalue () {
-
+    ...;
 }
 
 method multival_short () {

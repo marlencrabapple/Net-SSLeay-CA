@@ -73,7 +73,7 @@ x509args=(-in "$templateCA" -x509toreq
 [[ -n "$CLREXT" ]] && x509args+=(-clrext)
 [[ -n "$EXTFILE" ]] && x509args+=(-extfile "$EXTFILE")
 [[ -n "$EXTENSIONS" ]] && x509args+=(-extensions "$EXTENSIONS")
-[[ -n "$OPENSSL_CONF" ]] && x509args+=(-config "$OPENSSL_CONFIGH")
+[[ -n "$OPENSSL_CONFIG" ]] && x509args+=(-config "$OPENSSL_CONFIG")
 
 openssl x509 "${x509args[@]}"
 

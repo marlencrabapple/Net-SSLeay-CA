@@ -129,6 +129,14 @@ DISTRIBUTIONS
       perl 5.010
       strict 0
       warnings 0
+  Data-Dumper-Names-0.03
+    pathname: O/OV/OVID/Data-Dumper-Names-0.03.tar.gz
+    provides:
+      Data::Dumper::Names 0.03
+    requirements:
+      PadWalker 0.13
+      Scalar::Util 0
+      Test::More 0
   Data-OptList-0.114
     pathname: R/RJ/RJBS/Data-OptList-0.114.tar.gz
     provides:
@@ -1533,6 +1541,16 @@ DISTRIBUTIONS
       parent 0
       perl 5.008001
       version 0
+  Stream-Buffered-0.03
+    pathname: D/DO/DOY/Stream-Buffered-0.03.tar.gz
+    provides:
+      Stream::Buffered 0.03
+      Stream::Buffered::Auto undef
+      Stream::Buffered::File undef
+      Stream::Buffered::PerlIO undef
+    requirements:
+      ExtUtils::MakeMaker 6.30
+      IO::File 1.14
   String-Format-1.18
     pathname: S/SR/SREZIC/String-Format-1.18.tar.gz
     provides:

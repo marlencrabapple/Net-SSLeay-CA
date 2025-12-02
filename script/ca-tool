@@ -1,0 +1,94 @@
+#!/usr/bin/env perl
+
+use Object::Pad ':experimental(:all)';
+
+package Net::SSLeay::CA::catool;
+
+class Net::SSLeay::CA::catool;
+
+use utf8;
+use v5.40;
+
+use Net::Domain;
+use Getopt::Long;
+use Net::SSLeay;
+use Net::SSLeay::CA::Cmd;
+
+field $argv;
+field $clispec;
+field $cliopt;
+
+field $CAtop;
+field $CAclass;
+field $iter;
+field $issuer;
+field $pathlen;
+field $SAN;
+
+field $keyalgo = 'RSA';
+field $keybits = 4096;
+
+field $hostfqdn  = Net::Domain::hostfqdn;
+field $localuser = `whoami`;
+
+my class Subject {
+    field $cn : param;
+    field $o  : param;
+    field $ou : param;
+};
+
+field $subject : reader = {
+    Subject->new(
+        cn => "$localuser\@$hostfqdn $CAclass CA 《$keyalgo$keybits✖$iter》",
+        o  => "$hostfqdn",
+        ou => "Local User"
+    )
+};
+
+method writeh( $line, $handle, %opt ) {
+    binmode $handle, ":encoding(UTF-8)";
+    if ( $line isa 'ARRAY' ) {
+        say $handle $line for $handle->@*;
+    }
+    elsif ( !ref $line ) {
+        say $handle $line;
+    }
+}
+
+method outh ($line) {
+    $self->writeh( $line, *STDOUT );
+}
+
+method errh ($line) {
+    $self->writeh( $line, *STDERR );
+}
+
+method info ($line) {
+    $self->outh("▶ $line");
+}
+
+method err ($line) {
+    $self->errh("❌️ $line");
+}
+
+method fatal ( $line, $status = $? // 255, %opt ) {
+    $self->err($line);
+    exit $status;
+}
+
+method success ($line) {
+    $self->outh("⭕️ $line");
+}
+
+sub dmsg ( $self, $data, %opt ) {
+
+}
+
+method run : common  ($argv = \@ARGV, %opt) {
+    my $self = $class->new( argv => $argv, %opt );
+}
+
+package catool;
+
+our $catool = Net::SSLeay::CA::catool->run( \@ARGV );
+$catool->dmsg($catool)

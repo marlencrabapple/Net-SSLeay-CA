@@ -10,14 +10,22 @@ use v5.40;
 use vars '@EXPORT';
 
 @EXPORT = qw(exec);
-
 use parent 'Exporter';
 
 use IPC::Run3;
 use List::Util 'any';
 use Stream::Buffered;
 
-field $cmd_aref : param;
+my class Run : does(Net::SSLeay::CA::Base) {
+
+    # field $cmd_aref : param(cmd);
+    # field $outbuff  : param = [];
+    # field $errbuff  : param = [];
+    # field $status;
+    # field $err;
+};
+
+field $cmd_aref : param(cmd);
 field $outbuff  : param = [];
 field $errbuff  : param = [];
 field $status;
@@ -28,6 +36,8 @@ sub writeh ( $line, $handle = *STDOUT, %opts ) {
 
     $opts{buff} = Stream::Buffered->new
       if $opts{buff} && !ref $opts{buff} && $opts{buff} eq 1;
+
+# TODO: Check if does various file handle methods (seek in particular seemed important to a useful Tie implementation)
     $buff{ $opts{buff} } = $opts{buff} if $opts{buff} && ref $opts{buff};
 
     $line = "《Info》" if any { $opts{$_} == 1 } qw(info notice help);
@@ -76,8 +86,19 @@ method exec : common (
   %opts
   )
 {
-    my $exec = Net::SSLeay::CA::Exec->new;
-    my $run  = $exec->$_( $cmd_aref, $inh, $outh, $errh );
+    $opts{reinit} //= 1;
+
+    state $self;
+    if ( !$self || $opts{reinit} ) {
+        $self = Net::SSLeay::CA::Exec->new(
+            cmd => $cmd_aref,
+            in  => $inh,
+            out => $outh,
+            err => $errh
+        );
+    }
+
+    my $run = $self->$_( $cmd_aref, $inh, $outh, $errh );
 
     fatal( "Unknown error occured while trying to run external command:\n"
           . join " @$cmd_aref" );

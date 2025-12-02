@@ -10,10 +10,15 @@ package santest;
 
 class santest : isa(Net::SSLeay::CA::SAN);
 
-field $san;
+field $ip;
+field $dns;
+field $email;
+field $uri;
+
+#field $san;
 
 ADJUSTPARAMS($params) {
-    $san = Net::SSLeay::CA::SAN->new;
+    $san = Net::SSLeay::CA::SAN->;
     Net::SSLeay::CA::Base::dmsg($san)
 }
 

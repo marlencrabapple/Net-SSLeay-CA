@@ -7,7 +7,7 @@ role Net::SSLeay::CA::Base;
 use utf8;
 use v5.40;
 
-use Data::Dumper;
+use Data::Dumper::Names;
 use Time::HiRes;
 use Time::Piece;
 use Time::Moment;
@@ -50,11 +50,24 @@ APPLY($mop) {
     our @EXPORT = @{__PACKAGE__::EXPORT::}
 }
 
-# ADJUSTPARAMS($param) {
-#     use utf8;
-#     use v5.40;
-#     our @EXPORT = qw(dmsg epoch err);
-# }
+ADJUSTPARAMS($param) {
+    use utf8;
+    use v5.40;
+
+    # our @EXPORT = qw(dmsg epoch err);
+}
+
+sub symbolsplice ($toplevel) {
+
+# TODO: Traversig the symbol table outside of its contents life-cycles cause all
+# sorts of super bugs having to do with the typeglob equivalent to
+# auto-vivification. Not sure if local or Syntax::Keyword::Dynamically fixes this...
+    foreach my ( $k, $v ) (%$toplevel) {
+        ...
+
+        #if ();
+    }
+}
 
 sub epoch( $join = '', %opts ) {
     join $join, Time::HiRes::gettimeofday;

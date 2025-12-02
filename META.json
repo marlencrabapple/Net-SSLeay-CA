@@ -53,6 +53,7 @@
          "requires" : {
             "Const::Fast" : "0",
             "Const::Fast::Exporter" : "0",
+            "Data::Dumper::Names" : "0",
             "Devel::StackTrace::WithLexicals" : "0",
             "Exporter::Shiny" : "0",
             "Exporter::Tiny" : "0",
@@ -62,6 +63,7 @@
             "Net::SSLeay" : "0",
             "Object::Pad" : "0",
             "Path::Tiny" : "0",
+            "Stream::Buffered" : "0",
             "Syntax::Keyword::Defer" : "0",
             "Syntax::Keyword::Dynamically" : "0",
             "Syntax::Keyword::MultiSub" : "0",

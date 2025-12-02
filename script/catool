@@ -17,7 +17,8 @@ use Getopt::Long;
 use Path::Tiny;
 use Net::Domain;
 use List::Util 'any';
-use Net::SSLeay::CA::Exec;
+
+use Net::SSLeay::CA::Cmd;
 use Net::SSLeay::CA::SAN;
 
 #const our @CA_HEIRARCHY_RANK = qw(q);
@@ -54,15 +55,15 @@ my class Subject {
     field $ou : param;
 };
 
-field $subj : reader {
+field $subj : reader = {
     Subject->new(
-        cn => "$localuser@$hostfqdn $CArank CA 《$keyalgo$keybits✖$CArev》",
+        cn => "$localuser\@$hostfqdn $CArank CA 《$keyalgo$keybits✖$CArev》",
         o  => "$hostfqdn",
         ou => "Local User"
     )
-}
+};
 
-ADJUST : params ( :$asdf, :$fdsas ) {
+ADJUST : params ( :$subj ) {
 
 };
 
@@ -152,7 +153,7 @@ method selfsignCA {
     #   "/CN=$cnsubj/O=$hostfqdn/OU=Local User/C=US/" \-key "$newCAkey" -
     #   days 3652`
 
-    Net::SSLeay::CA::Exec->exec(
+    Net::SSLeay::CA::Cmd->run(
         [
             @$openssl,            qw(x509 -req -in),
             "$CAtop/$newCAcsr",   qw(copy_extensions copyall -out),

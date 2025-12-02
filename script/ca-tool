@@ -11,44 +11,89 @@ use v5.40;
 
 use lib 'lib';
 
+use Time::Moment;
+use Time::Piece;
+use Time::Seconds;
+use Pod::Usage qw(pod2usage);
+use Const::Fast;
+use Data::Dumper::Names;
 use Net::Domain;
-use Getopt::Long;
+use Getopt::Long
+  qw(GetOptionsFromArray HelpMessage :config no_ignore_case bundling auto_abbrev);
+
 use Net::SSLeay;
+use Net::SSLeay::CA::Strings;
 use Net::SSLeay::CA::Cmd;
+
+const our $DEBUG => $ENV{DEBUG};
 
 field $argv;
 field $clispec;
 field $cliopt;
-
+field $debug   = $DEBUG;
+field $openssl = `which openssl`;
 field $CAtop;
-field $CAclass;
-field $iter;
+
+field $csr;
+field $CAcert;
+field $CAkey;
+field $certfile;
+field $keyfile;
+
+field $class = "Local";
+field $iter  = 1;
 field $issuer;
-field $pathlen;
+field $pathlen = 0;
 field $SAN;
+
+field @days = Time::Seconds->new( ONE_YEAR * 5 )->days;
 
 field $keyalgo = 'RSA';
 field $keybits = 4096;
 
-field $hostfqdn  = Net::Domain::hostfqdn;
-field $localuser = `whoami`;
+field $hostfqdn  { $self->hostfqdn };
+field $localuser { $self->localuser };
 
 my class Subject {
-    field $cn : param;
-    field $o  : param;
-    field $ou : param;
+    field $cn : param : mutator;
+    field $o  : param : mutator;
+    field $ou : param : mutator;
 };
 
-field $subject : reader = {
+field $subject : reader {
     Subject->new(
-        cn => "$localuser\@$hostfqdn $CAclass CA 《$keyalgo$keybits✖$iter》",
+        cn => "$localuser\@$hostfqdn $class CA 《$keyalgo$keybits✖$iter》",
         o  => "$hostfqdn",
         ou => "Local User"
     )
 };
 
+ADJUST {
+    $self->dmsg($self)
+}
+
+method localuser {
+    $localuser //= `whoami`;
+    $localuser;
+}
+
+method hostfqdn ( $fqdn = undef ) {
+    if ($fqdn) {
+        $hostfqdn = $fqdn;
+    }
+    else {
+        $hostfqdn //= Net::Domain::hostfqdn;
+    }
+
+    $hostfqdn;
+}
+
 method writeh( $line, $handle, %opt ) {
-    binmode $handle, ":encoding(UTF-8)";
+    state %handle;
+    unless ( $handle{$handle} ) {
+        $handle{$handle} = IO::Handle->new->fdopen( fileno($handle), "w" );
+        binmode $handle, ":encoding(UTF-8)";
+    }
     if ( $line isa 'ARRAY' ) {
         say $handle $line for $handle->@*;
     }
@@ -82,15 +127,136 @@ method success ($line) {
     $self->outh("⭕️ $line");
 }
 
-sub dmsg ( $self, $data, %opt ) {
+method valid_days ( $str, %opt ) {
+    const my $durunit_re => qr/^[0-9]+([a-z]{1,3})$/i;
 
+    if ( my ( $dur, $unit ) = $str =~ $durunit_re ) {
+
+    }
+}
+
+method newCA {
+    GetOptionsFromArray(
+        $argv,
+        'CAcert=s',
+        'cert|certfile=s',
+        'CAkey=s',
+        'key|keyfile=s',
+
+        # 'signingCAcertfile=s',
+        # 'signingCAkeyfile=s',
+        'csr', 'class',
+        'subject=s',
+        'cn|commonname=s',
+        'org|organization=s',
+        'ou|organizational-unit|',
+        'days|daysvalid|days-valid=s',
+        'keyalgo|key-algorithm=s',
+        'keybits|key-bits=s',
+        'pathlen=s',
+        'san|SAN|subject-alternative-name|subj-alt-name|subjaltname=s',
+        <> => sub ($bare) {
+            $self->fatal(
+"Conflicting options -cn|commonname and positional/bare argument (subject common name) are both set"
+            ) if $subject->cn;
+            $subject->cn = $bare;
+        },
+        "help" => sub { HelpMessage() }
+    );
+}
+
+method signCA {
+
+}
+
+method selfsignCA {
+
+    Net::SSLeay::CA::Cmd->run(
+        [
+            @$openssl,               qw(x509 -req -in),
+            "$CAtop/$csr",           qw(copy_extensions copyall -out),
+            $certfile,               '-set_subject',
+            $subject->mutlivalue_SH, '-key',
+            "$keyfile",              @days
+        ]
+    );
+}
+
+method newcert {
+
+}
+
+method newcsr {
+
+}
+
+method newreq {
+    $self->newcsr(@_);
+}
+
+method signcsr {
+
+}
+
+method signreq {
+    $self->signcsr(@_);
+}
+
+method genpkey {
+    $self->info("Generating private key ($keyalgo:$keybits):");
+
+   # pkeyconf=("$keyalgo" "bits:$keybits")
+   # openssl genpkey -algorithm "${pkeyconf[*]:0:1}" -pkeyopt "${pkeyconf[*]:1:1
+   # -out "$CAtop/private/$newCAkey";
+}
+
+method secureboot {
+
+    # Generate/sign which ever keys aren't provided
+}
+
+method dmsg {
+    local $Data::Dumper::Names::UpLevel = 2;
+    $self->info( Dumper(@_) );
+}
+
+method help ( $error = "", $exit = ( $? >> 8 || 0 ) ) {
+    my $caller = [ caller 0 ];
+
+    $self->err( "$error $$caller[0]:$$caller[1] line " . __LINE__ . "\n" )
+      if $error;
+
+    $class->dmsg( { caller => $caller, ( $error ? ( error => $error ) : () ) } )
+      if $debug > 1;
+
+    $self->info( pod2usage(2) );
+
+    exit $exit;
 }
 
 method run : common  ($argv = \@ARGV, %opt) {
-    my $self = $class->new( argv => $argv, %opt );
+    my $command //= 'help';
+    GetOptionsFromArray(
+        $argv,
+'command|newCA|signCA|newcert|newreq|newcsr|help|signcsr|genpkey|newkey|secureboot|sb',
+        'openssl-config=s',
+        'config=s',
+        'openssl-binary',
+        'catop|top|dir|caroot|rootdir=s',
+
+        # "help|?"  => sub { HelpMessage() },
+        "version" => sub { VersionMessage() }
+    );
+    my $self = $class->new(
+        command => $command,
+        argv    => $argv,
+        %opt
+    );
+    $self->$command;
 }
 
 package catool;
-
+use Getopt::Long
+  qw(GetOptionsFromArray :config no_ignore_case bundling auto_abbrev);
 our $catool = Net::SSLeay::CA::catool->run( \@ARGV );
 $catool->dmsg($catool)

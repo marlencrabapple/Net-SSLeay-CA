@@ -9,6 +9,8 @@ class Net::SSLeay::CA::catool;
 use utf8;
 use v5.40;
 
+use lib 'lib';
+
 use Net::Domain;
 use Getopt::Long;
 use Net::SSLeay;

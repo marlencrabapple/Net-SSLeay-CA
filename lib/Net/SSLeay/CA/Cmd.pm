@@ -30,13 +30,15 @@ my class TieArrayStd {
     }
 
     method PUSH (@LIST) {
+
         say $handle $_ for @LIST;
-        SUPER::PUSH( $self, @LIST );
+        SUPER->( $self, @LIST );
     }
 
     method STORE ( $index, $value ) {
+
         say $handle $value;
-        SUPER::STORE( $self, $index, $value );
+        SUPER->( $index, $value );
     }
 };
 
@@ -50,6 +52,6 @@ method $run ($cmd) {
 }
 
 method run : common ($cmd, $_in = \undef, $_out = [], $_err = []) {
-    $self = $class->new( in => $_in, out => $_out, err => $_err );
+    my $self = $class->new( in => $_in, out => $_out, err => $_err );
     $self->$run($cmd);
 }

@@ -20,9 +20,9 @@ use Exporter 'import';
 
 use vars qw'@ISA @EXPORT';
 
-# use subs qw(dmsg epoch err);
+use subs qw(dmsg epoch error success);
 
-# @ISA    = qw(Exporter);
+@ISA = qw(Exporter);
 @EXPORT = qw(dmsg epoch err);
 
 const our $DEBUG        => $ENV{DEBUG} // 0;

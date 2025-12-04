@@ -18,7 +18,7 @@ field $uri;
 #field $san;
 
 ADJUSTPARAMS($params) {
-    $san = Net::SSLeay::CA::SAN->;
+    my $san = Net::SSLeay::CA::SAN->new();
     Net::SSLeay::CA::Base::dmsg($san)
 }
 

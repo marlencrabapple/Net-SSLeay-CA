@@ -4,7 +4,7 @@ use Object::Pad ':experimental(:all)';
 
 package Net::SSLeay::CA::catool;
 
-class Net::SSLeay::CA::catool;
+class Net::SSLeay::CA::catool : does(Net::SSLeay::CA::Base);
 
 use utf8;
 use v5.40;
@@ -22,16 +22,17 @@ use Getopt::Long
   qw(GetOptionsFromArray HelpMessage :config no_ignore_case bundling auto_abbrev);
 
 use Net::SSLeay;
+use Net::SSLeay::CA::Util;
 use Net::SSLeay::CA::Strings;
 use Net::SSLeay::CA::Cmd;
 
-const our $DEBUG => $ENV{DEBUG};
+const our $DEBUG => $ENV{DEBUG} // 0;
 
 field $argv;
 field $clispec;
 field $cliopt;
 field $debug   = $DEBUG;
-field $openssl = `which openssl`;
+field $openssl = map { chomp $_; $_ } (`which openssl`);
 field $CAtop;
 
 field $csr;
@@ -52,17 +53,25 @@ field $keyalgo = 'RSA';
 field $keybits = 4096;
 
 field $hostfqdn  { $self->hostfqdn };
-field $localuser { $self->localuser };
+field $localuser { ( $self->localuser ) };
 
 my class Subject {
     field $cn : param : mutator;
     field $o  : param : mutator;
     field $ou : param : mutator;
+
+    method toASN1 {
+        my ( %defined, $asn1 );
+        foreach my ( $k, $v ) ( CN => $cn, O => $o, OU => $ou ) {
+            $defined{$k} = $v;
+        }
+        $asn1 = join '/', map { "$_=$defined{$_}" } keys %defined;
+    }
 };
 
 field $subject : reader {
     Subject->new(
-        cn => "$localuser\@$hostfqdn $class CA 《$keyalgo$keybits✖$iter》",
+        cn => "$localuser\@$hostfqdn $class CA$iter",
         o  => "$hostfqdn",
         ou => "Local User"
     )
@@ -72,59 +81,18 @@ ADJUST {
     $self->dmsg($self)
 }
 
-method localuser {
-    $localuser //= `whoami`;
+method $cmd {
+    %Net::SSLeay::CA::Cmd::;
+}
+
+method localuser ( $user //= getpwent ) {
+    $localuser //= $user;
     $localuser;
 }
 
-method hostfqdn ( $fqdn = undef ) {
-    if ($fqdn) {
-        $hostfqdn = $fqdn;
-    }
-    else {
-        $hostfqdn //= Net::Domain::hostfqdn;
-    }
-
+method hostfqdn ( $fqdn =  Net::Domain::hostfqdn ) {
+$hostfqdn //= $fqdn;
     $hostfqdn;
-}
-
-method writeh( $line, $handle, %opt ) {
-    state %handle;
-    unless ( $handle{$handle} ) {
-        $handle{$handle} = IO::Handle->new->fdopen( fileno($handle), "w" );
-        binmode $handle, ":encoding(UTF-8)";
-    }
-    if ( $line isa 'ARRAY' ) {
-        say $handle $line for $handle->@*;
-    }
-    elsif ( !ref $line ) {
-        say $handle $line;
-    }
-}
-
-method outh ($line) {
-    $self->writeh( $line, *STDOUT );
-}
-
-method errh ($line) {
-    $self->writeh( $line, *STDERR );
-}
-
-method info ($line) {
-    $self->outh("▶ $line");
-}
-
-method err ($line) {
-    $self->errh("❌️ $line");
-}
-
-method fatal ( $line, $status = $? // 255, %opt ) {
-    $self->err($line);
-    exit $status;
-}
-
-method success ($line) {
-    $self->outh("⭕️ $line");
 }
 
 method valid_days ( $str, %opt ) {
@@ -133,6 +101,22 @@ method valid_days ( $str, %opt ) {
     if ( my ( $dur, $unit ) = $str =~ $durunit_re ) {
 
     }
+}
+
+method x509toreq {
+
+# x509args=(-in "$templateCA" -x509toreq
+#     -out "$CAtop/$newCAcsr" \
+#     -set_subject "/CN=$cnsubj/O=$hostfqdn/OU=${SUBJ_ON:-Local User}/C=${SUBJ_C:-US}/" \
+#     -key "$CAtop/private/$newCAkey"
+# )
+
+    # [[ -n "$CLREXT" ]] && x509args+=(-clrext)
+    # [[ -n "$EXTFILE" ]] && x509args+=(-extfile "$EXTFILE")
+    # [[ -n "$EXTENSIONS" ]] && x509args+=(-extensions "$EXTENSIONS")
+    # [[ -n "$OPENSSL_CONFIG" ]] && x509args+=(-config "$OPENSSL_CONFIG")
+
+    # openssl x509 "${x509args[@]}"
 }
 
 method newCA {
@@ -165,21 +149,16 @@ method newCA {
     );
 }
 
+method CAsign {
+    $cmd->run( [ $openssl, 'ca', ] );
+}
+
 method signCA {
 
 }
 
 method selfsignCA {
 
-    Net::SSLeay::CA::Cmd->run(
-        [
-            @$openssl,               qw(x509 -req -in),
-            "$CAtop/$csr",           qw(copy_extensions copyall -out),
-            $certfile,               '-set_subject',
-            $subject->mutlivalue_SH, '-key',
-            "$keyfile",              @days
-        ]
-    );
 }
 
 method newcert {

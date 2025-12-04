@@ -39,6 +39,7 @@
             "Module::Build::Tiny" : "0",
             "Module::Signature" : "0",
             "Perl::Critic" : "0",
+            "Perl::Critic::Community" : "0",
             "Perl::Tidy" : "0",
             "Software::License" : "0",
             "Test::CPAN::Meta" : "0",

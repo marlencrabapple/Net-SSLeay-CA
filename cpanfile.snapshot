@@ -1301,6 +1301,75 @@ DISTRIBUTIONS
       strict 0
       version 0.77
       warnings 0
+  Perl-Critic-Community-v1.0.4
+    pathname: D/DB/DBOOK/Perl-Critic-Community-v1.0.4.tar.gz
+    provides:
+      Perl::Critic::Community v1.0.4
+      Perl::Critic::Community::Utils v1.0.4
+      Perl::Critic::Policy::Community::AmpersandSubCalls v1.0.4
+      Perl::Critic::Policy::Community::ArrayAssignAref v1.0.4
+      Perl::Critic::Policy::Community::BarewordFilehandles v1.0.4
+      Perl::Critic::Policy::Community::ConditionalDeclarations v1.0.4
+      Perl::Critic::Policy::Community::ConditionalImplicitReturn v1.0.4
+      Perl::Critic::Policy::Community::DeprecatedFeatures v1.0.4
+      Perl::Critic::Policy::Community::DiscouragedModules v1.0.4
+      Perl::Critic::Policy::Community::DollarAB v1.0.4
+      Perl::Critic::Policy::Community::Each v1.0.4
+      Perl::Critic::Policy::Community::EmptyReturn v1.0.4
+      Perl::Critic::Policy::Community::IndirectObjectNotation v1.0.4
+      Perl::Critic::Policy::Community::LexicalForeachIterator v1.0.4
+      Perl::Critic::Policy::Community::LoopOnHash v1.0.4
+      Perl::Critic::Policy::Community::ModPerl v1.0.4
+      Perl::Critic::Policy::Community::MultidimensionalArrayEmulation v1.0.4
+      Perl::Critic::Policy::Community::OpenArgs v1.0.4
+      Perl::Critic::Policy::Community::OverloadOptions v1.0.4
+      Perl::Critic::Policy::Community::POSIXImports v1.0.4
+      Perl::Critic::Policy::Community::PackageMatchesFilename v1.0.4
+      Perl::Critic::Policy::Community::PreferredAlternatives v1.0.4
+      Perl::Critic::Policy::Community::Prototypes v1.0.4
+      Perl::Critic::Policy::Community::SplitQuotedPattern v1.0.4
+      Perl::Critic::Policy::Community::StrictWarnings v1.0.4
+      Perl::Critic::Policy::Community::Threads v1.0.4
+      Perl::Critic::Policy::Community::Wantarray v1.0.4
+      Perl::Critic::Policy::Community::WarningsSwitch v1.0.4
+      Perl::Critic::Policy::Community::WhileDiamondDefaultAssignment v1.0.4
+    requirements:
+      Carp 0
+      Exporter 0
+      List::Util 1.33
+      Module::Build::Tiny 0.034
+      PPI 1.254
+      Path::Tiny 0.101
+      Perl::Critic 1.126
+      Perl::Critic::Policy::Objects::ProhibitIndirectSyntax 1.126
+      Perl::Critic::Policy::Plicease::ProhibitArrayAssignAref 100.00
+      Perl::Critic::Policy::Subroutines::ProhibitAmpersandSigils 1.126
+      Perl::Critic::Policy::Variables::ProhibitConditionalDeclarations 1.126
+      Perl::Critic::Policy::Variables::ProhibitLoopOnHash 0.005
+      Perl::Critic::Policy::Variables::RequireLexicalLoopIterators 1.126
+      Scalar::Util 0
+      parent 0
+      perl 5.010001
+      version 0
+  Perl-Critic-Policy-Plicease-ProhibitArrayAssignAref-100.00
+    pathname: P/PL/PLICEASE/Perl-Critic-Policy-Plicease-ProhibitArrayAssignAref-100.00.tar.gz
+    provides:
+      Perl::Critic::Policy::Plicease::ProhibitArrayAssignAref 100.00
+    requirements:
+      ExtUtils::MakeMaker 0
+      Perl::Critic::Policy 0
+      Perl::Critic::Utils 0
+      perl 5.006
+  Perl-Critic-Policy-Variables-ProhibitLoopOnHash-0.008
+    pathname: X/XS/XSAWYERX/Perl-Critic-Policy-Variables-ProhibitLoopOnHash-0.008.tar.gz
+    provides:
+      Perl::Critic::Policy::Variables::ProhibitLoopOnHash 0.008
+    requirements:
+      Carp 0
+      ExtUtils::MakeMaker 0
+      List::Util 1.33
+      Perl::Critic 1.126
+      parent 0
   Perl-MinimumVersion-Fast-0.22
     pathname: B/BD/BDFOY/Perl-MinimumVersion-Fast-0.22.tar.gz
     provides:

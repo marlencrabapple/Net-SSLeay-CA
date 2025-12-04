@@ -31,6 +31,7 @@ on 'test' => sub {
 
 on 'develop' => sub {
     requires 'Perl::Critic';
+    requires 'Perl::Critic::Community';
     requires 'Perl::Tidy';
     requires 'Minilla';
     requires 'App::FatPacker';

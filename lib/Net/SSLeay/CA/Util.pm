@@ -7,16 +7,20 @@ class Net::SSLeay::CA::Util : does(Net::SSLeay::CA::Base);
 use utf8;
 use v5.40;
 
-# use parent 'Exporter';
-# use vars '@EXPORT_OK';
+use parent 'Exporter';
+use vars '@EXPORT_OK';
 
-# @EXPORT_OK = qw(user_faux_email hostfqdn domainname);
+@EXPORT_OK = qw(hostfqdn domainname localuser);
 
 use List::Util 'first';
 use Net::Domain;
 
 sub user_faux_mail {
     first { /\.[^.]+$/ } @Net::Domain::{qw(hostfqdn domainname make_anonymous)};
+}
+
+sub localuser {
+    getpwent;
 }
 
 sub hostfqdn {

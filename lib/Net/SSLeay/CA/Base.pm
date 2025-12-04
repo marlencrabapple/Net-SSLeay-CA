@@ -57,17 +57,7 @@ ADJUSTPARAMS($param) {
     # our @EXPORT = qw(dmsg epoch err);
 }
 
-sub symbolsplice ($toplevel) {
 
-# TODO: Traversig the symbol table outside of its contents life-cycles cause all
-# sorts of super bugs having to do with the typeglob equivalent to
-# auto-vivification. Not sure if local or Syntax::Keyword::Dynamically fixes this...
-    foreach my ( $k, $v ) (%$toplevel) {
-        ...
-
-        #if ();
-    }
-}
 
 sub epoch( $join = '', %opts ) {
     join $join, Time::HiRes::gettimeofday;
@@ -123,21 +113,41 @@ sub err : prototype($;$%) (
     die "ERROR: $errstr ($exit)";
 }
 
-method help : common ( $error = "", $exit = ($? >> 8 || 0)) {
-    my $caller = [ caller 0 ];
-
-    warn "$error $$caller[0]:$$caller[1] line " . __LINE__ . "\n\n" if $error;
-
-    $class->dmsg( { caller => $caller, ( $error ? ( error => $error ) : () ) } )
-      if $DEBUG > 1;
-
-    warn <<EOF;
-Usage:
-    CA.pl -newcert | -newreq | -newreq-nodes | -xsign | -sign | -signCA | -signcert | -crl | -newca [-extra-cmd parameter]
-    CA.pl -pkcs12 [certname]
-    CA.pl -verify certfile ...
-    CA.pl -revoke certfile [reason]
-EOF
-    exit $exit;
+method writeh( $line, $handle, %opt ) {
+    state %handle;
+    unless ( $handle{$handle} ) {
+        $handle{$handle} = IO::Handle->new->fdopen( fileno($handle), "w" );
+        binmode $handle, ":encoding(UTF-8)";
+    }
+    if ( $line isa 'ARRAY' ) {
+        say $handle $line for $handle->@*;
+    }
+    elsif ( !ref $line ) {
+        say $handle $line;
+    }
 }
 
+method outh ($line) {
+    $self->writeh( $line, *STDOUT );
+}
+
+method errh ($line) {
+    $self->writeh( $line, *STDERR );
+}
+
+method info ($line) {
+    $self->outh("▶ $line");
+}
+
+method error ($line) {
+    $self->errh("❌️ $line");
+}
+
+method fatal ( $line, $status = $? // 255, %opt ) {
+    $self->err($line);
+    exit $status;
+}
+
+method success ($line) {
+    $self->outh("⭕️ $line");
+}

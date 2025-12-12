@@ -24,9 +24,35 @@ use Getopt::Long
 use Net::SSLeay;
 use Net::SSLeay::CA::Util;
 use Net::SSLeay::CA::Strings;
-use Net::SSLeay::CA::Cmd;
+use Net::SSLeay::CA::Util::Cmd;
 
 const our $DEBUG => $ENV{DEBUG} // 0;
+const our $OPENSSL_KEYSPEC =
+  ( 'keyalgo|key-algorithm=s', 'keybits|key-bits=s' );
+const our $OPENSSL_CERTSPEC => (
+
+    'csr|in=s'
+    , # Would this evver be anything other than a CSR? Possibly just a list of files we later detect the purpose of? x509toreq would need a certifiate input rather than a CSR. And of course there are already options for config files we'll proabably pass through to openssl
+    'CAcert|signing-certfile|signature-certfile=s',
+    'CAkey=s|signing-keyfile=s|signature-keyfile=s',
+
+    'cert|certfile=s',
+    'key|keyfile=s',
+
+    # 'clientauth-certfile=s',
+    # 'clientauth-keyfile=s'
+    #
+
+    # 'signingCAcertfile=s',
+    # 'signingCAkeyfile=s',
+
+    'subject=s',
+    'cn|commonname=s',
+    'org|organization=s',
+    'ou|organizational-unit|',
+    'days|daysvalid|days-valid|duration|validfor|valid-for=s',
+
+);
 
 field $argv;
 field $clispec;
@@ -122,26 +148,26 @@ method x509toreq {
 method newCA {
     GetOptionsFromArray(
         $argv,
-        'CAcert=s',
-        'cert|certfile=s',
-        'CAkey=s',
-        'key|keyfile=s',
+        #'CAcert=s',
+        #'cert|certfile=s',
+        #'CAkey=s',
+        #'key|keyfile=s',
 
         # 'signingCAcertfile=s',
         # 'signingCAkeyfile=s',
-        'csr', 'class',
-        'subject=s',
-        'cn|commonname=s',
-        'org|organization=s',
-        'ou|organizational-unit|',
-        'days|daysvalid|days-valid=s',
-        'keyalgo|key-algorithm=s',
-        'keybits|key-bits=s',
+        #'csr',# 'class',
+        # 'subject=s',
+        # 'cn|commonname=s',
+        # 'org|organization=s',
+        # 'ou|organizational-unit|',
+        # 'days|daysvalid|days-valid=s',
+        # 'keyalgo|key-algorithm=s',
+        # 'keybits|key-bits=s',
         'pathlen=s',
-        'san|SAN|subject-alternative-name|subj-alt-name|subjaltname=s',
+        #'san|SAN|subject-alternative-name|subj-alt-name|subjaltname=s',
         <> => sub ($bare) {
             $self->fatal(
-"Conflicting options -cn|commonname and positional/bare argument (subject common name) are both set"
+"Conflicting options `-cn|commonname` and positional argument (for: subject common name) are both set. Only one can be defined at a time."
             ) if $subject->cn;
             $subject->cn = $bare;
         },
@@ -166,7 +192,7 @@ method newcert {
 }
 
 method newcsr {
-
+GetOptionsFromArray( $argv, )
 }
 
 method newreq {

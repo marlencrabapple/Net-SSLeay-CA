@@ -18,8 +18,12 @@ use Path::Tiny;
 use Net::Domain;
 use List::Util 'any';
 
-use Net::SSLeay::CA::Cmd;
-use Net::SSLeay::CA::SAN;
+use Net::SSLeay::CA::Util::Cmd;
+use Net::SSLeay::CA::Certificate::SAN;
+
+my class x509 {
+
+};
 
 #const our @CA_HEIRARCHY_RANK = qw(q);
 field $openssl;

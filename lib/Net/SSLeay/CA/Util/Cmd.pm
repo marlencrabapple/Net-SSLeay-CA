@@ -1,13 +1,15 @@
 #!/usr/bin/env perl
 use Object::Pad ':experimental(:all)';
 
-package Net::SSLeay::CA::Cmd;
+package Net::SSLeay::CA::Util::Cmd;
 
-class Net::SSLeay::CA::Cmd;
+class Net::SSLeay::CA::Util::Cmd;
 
 use utf8;
 use v5.40;
-
+use vars '@EXPORT';
+use parent 'Exporter';
+@EXPORT = qw(run);
 use IPC::Run3;
 use IO::Handle;
 
@@ -51,7 +53,11 @@ method $run ($cmd) {
     run3( $cmd, $in, $out, $err );
 }
 
-method run : common ($cmd, $_in = \undef, $_out = [], $_err = []) {
+method run : common  ($cmd, $_in = \undef, $_out = [], $_err = []) {
     my $self = $class->new( in => $_in, out => $_out, err => $_err );
     $self->$run($cmd);
+}
+
+sub cmd {
+    return __PACKAGE__->run;
 }

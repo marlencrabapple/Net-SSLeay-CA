@@ -13,8 +13,7 @@ use List::Util qw'all first';
 use Time::HiRes 'gettimeofday';
 use Sys::Hostname 'hostname';
 use Net::SSLeay::CA::Base 'dmsg';
-use Net::SSLeay::CA::Exec;
-use IPC::Run3;
+use Net::SSLeay::CA::Util::Cmd;
 
 const our $SBTOOL_ROOT      => path( $ENV{SBTOOL_ROOT} // '/etc/sbtool' );
 const our $CERTFILE_EXT_PTN => qr/(pem|crt)$/;

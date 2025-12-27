@@ -27,7 +27,7 @@ use Net::SSLeay::CA::Strings;
 use Net::SSLeay::CA::Util::Cmd;
 
 const our $DEBUG => $ENV{DEBUG} // 0;
-const our $OPENSSL_KEYSPEC =
+const our $OPENSSL_KEYSPEC =>
   ( 'keyalgo|key-algorithm=s', 'keybits|key-bits=s' );
 const our $OPENSSL_CERTSPEC => (
 

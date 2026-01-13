@@ -1,0 +1,82 @@
+#!/usr/bin/env perl
+use Object::Pad ':experimental(:all)';
+
+package newca;
+
+use lib 'lib';
+
+class newca : does(Net::SSLeay::CA::Util);
+
+use utf8;
+use v5.40;
+
+use File::chdir;
+use Path::Tiny;
+use List::Util qw'uniq any';
+use Const::Fast;
+use IPC::Nosh;
+use IPC::Nosh::IO;
+use TOML::Tiny;
+use Syntax::Keyword::Dynamically;
+use Syntax::Keyword::Try;
+use Getopt::Long
+  qw(GetOptionsFromArray :config no_ignore_case auto_abbrev passthrough long_prefix_pattern=--?);
+
+use Net::SSLeay::CA::Util;
+
+field $catop : param { path( "$CWD/" . newca->hostname . '-CA' ) }
+field $verbose : param = 0;
+field $debug   : param = 0;
+
+ADJUST {
+    dmsg $self
+}
+
+method GetOptionsFromCLI : common ($argv = \@ARGV) {
+    my %clidest = ();
+    GetOptionsFromArray(
+        $argv,
+        \%clidest,
+
+        'verbose+',
+        'debug+',
+        '<>' => sub ($varin) {
+            chomp $varin;
+            push $clidest{envvars}->@*, $varin;
+        }
+    );
+
+    my $self = $class->new(%clidest);
+
+    return $self;
+}
+
+method export_system_trust ( $destdir = $catop ) {
+    $destdir = path($destdir) unless $destdir isa Path::Tiny;
+
+    dynamically $CWD = $destdir;
+    $self->export_system_trust;
+
+    my $run = run(
+        [
+            qw(trust extract --verbose --format=pem-directory --filter=ca-anchors --purpose=server-auth),
+            "$catop/system-trust"
+        ]
+    );
+
+    dmsg $run;
+    $destdir;
+}
+
+method init_catop {
+    const my @cadirtree = qw(private newcert crl certs db);
+    $catop->mkdir;
+
+    foreach my $dir (@cadirtree) {
+        $catop->mkdir($dir);
+    }
+}
+
+package main;
+
+newca->GetOptionsFromCLI( \@ARGV )

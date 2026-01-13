@@ -30,6 +30,8 @@ MYMETA.*
 
 /Net-SSLeay-CA-*
 
+!META.json
+/.prove
 ._*
 .DS_Store
 *.{pem,p12,key,crt}

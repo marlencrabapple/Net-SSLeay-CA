@@ -1,0 +1,104 @@
+#!/usr/bin/env perl
+use Object::Pad ':experimental(:all)';
+
+package cfssl_bundle;
+
+class cfssl_bundle;
+
+use v5.40;
+use utf8;
+
+use URI;
+use List::Util qw'first any';
+use IPC::Nosh;
+use IPC::Nosh::IO;
+use IPC::Run3;
+use JSON::MaybeXS;
+use Path::Tiny;
+use Getopt::Long
+  qw(GetOptionsFromArray :config no_ignore_case bundling auto_abbrev passthrough);
+
+field $argv  : param;
+field $cfssl : param //=
+  ( map { chomp $_; $_ } (`which cfssl`) )[0];
+field $certfile;
+field $domain;
+field $output     : param = undef;
+field $truststore : param = undef;
+
+ADJUSTPARAMS($params) {
+
+    # Is there any reason to restrict users to just one of the two besides the
+    # underlying implementation already doing so?
+    $certfile //= path( $$params{certfile} )
+      if $$params{certfile};    #&& !$domain // $$params{domain};
+    $domain //= URI->new( $$params{domain} )
+      if $$params{domain};      # && !$cert // $$params{cert};
+
+    die "Neither --cert or --domain are set. Please provide one."
+      unless any { $_ } ( $certfile, $domain );
+
+    dmsg( $self, $domain, $certfile );
+
+}
+
+method cli : common ( $argv = \@ARGV ) {
+    my %clidest;
+
+    GetOptionsFromArray(
+        $argv,
+        \%clidest,
+        'certfile|certificate=s',
+        'domain|domain-name|fqdn|remote-host=s',
+        'output=s',
+        'cfssl|cffslbin|binary|pathtoexe=s',
+        'truststore|ca-store|ca-trusted|cacerts=s'
+    );
+
+    dmsg( \%clidest, $argv );
+
+    my $self = $class->new( argv => $argv, %clidest );
+    $self->bundle(%clidest);
+}
+
+method bundle(%opt) {
+    my $input =
+        $certfile ? { '-cert' => $certfile }
+      : $domain   ? { '-domain' => $domain }
+      :   die "No --domain or --cert supplied as input. There is nothing to do.";
+
+    my @cmd = ( $cfssl, 'bundle', @$argv, %$input );
+    my ( @out, @err );
+    dmsg( \@cmd );
+
+    my $ipcfail = run3(
+        \@cmd,
+        \undef,
+        sub ($line) {
+            $line =~ s/^[\n\r]*$//g;
+            push @out, $line;
+            say $line;
+        },
+        sub ($line) {
+            $line =~ s/^[\n\r]*$//g;
+            push @err, $line;
+            say STDERR $line;
+        }
+    );
+    my ( $status, $oserr ) = ( $?, $! );
+
+    err("cfssl exited with a non-zero status: $status") if $status != 0;
+    err($oserr)                                         if $oserr;
+
+    fatal("Encountered unrecoverable IPC error: $ipcfail") if $ipcfail != 1;
+
+    dmsg( $ipcfail, $certfile, $domain, \@out );
+
+    my $certbundle = decode_json( join "\n", @out );
+
+    dmsg($certbundle);
+}
+
+package main;
+
+cfssl_bundle->cli( \@ARGV )

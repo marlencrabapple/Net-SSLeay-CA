@@ -1,0 +1,87 @@
+#!/usr/bin/env perl
+use Object::Pad ':experimental(:all)';
+
+package sscert;
+
+class sscert;
+
+use v5.40;
+use utf8;
+
+use URI;
+use List::Util qw'first any';
+use IPC::Nosh;
+use IPC::Nosh::IO;
+
+#use IPC::Run3;
+#use JSON::MaybeXS;
+use Path::Tiny;
+use Getopt::Long
+  qw(GetOptionsFromArray :config no_ignore_case bundling auto_abbrev passthrough);
+
+field $argv : param;
+
+field $cfssl : param //=
+  ( map { chomp $_; $_ } (`which cfssl`) )[0];
+field $certfile;
+field $domain;
+
+#field $output     : param = undef;
+#field $truststore : param = undef;
+
+ADJUSTPARAMS($params) {
+
+}
+
+method cli : common ( $argv = \@ARGV ) {
+    my %clidest;
+
+    GetOptionsFromArray( $argv, \%clidest, );
+
+    dmsg( \%clidest, $argv );
+
+    my $self = $class->new( argv => $argv, %clidest );
+    $self->bundle;
+}
+
+method bundle(%opt) {
+    my $input =
+        $certfile ? { '-cert' => $certfile }
+      : $domain   ? { '-domain' => $domain }
+      :   die "No --domain or --cert supplied as input. There is nothing to do.";
+
+    my @cmd = ( $cfssl, 'bundle', @$argv, %$input );
+    my ( @out, @err );
+    dmsg( \@cmd );
+
+    my $ipcfail = run3(
+        \@cmd,
+        \undef,
+        sub ($line) {
+            $line =~ s/^[\n\r]*$//g;
+            push @out, $line;
+            say $line;
+        },
+        sub ($line) {
+            $line =~ s/^[\n\r]*$//g;
+            push @err, $line;
+            say STDERR $line;
+        }
+    );
+    my ( $status, $oserr ) = ( $?, $! );
+
+    err("cfssl exited with a non-zero status: $status") if $status != 0;
+    err($oserr)                                         if $oserr;
+
+    fatal("Encountered unrecoverable IPC error: $ipcfail") if $ipcfail != 1;
+
+    dmsg( $ipcfail, $certfile, $domain, \@out );
+
+    my $certbundle = decode_json( join "\n", @out );
+
+    dmsg($certbundle);
+}
+
+package main;
+
+cfssl_bundle->cli( \@ARGV )

@@ -5,3 +5,11 @@
 MYMETA.*
 !META.json
 /.prove
+._*
+.DS_Store
+/.carmel
+/local
+/fatlib
+/fatpack
+
+

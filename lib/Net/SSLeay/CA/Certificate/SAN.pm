@@ -34,14 +34,7 @@ ADJUST : params (:$uri, :$ip, :$email, :$dns, :$rid, :$dirname, :$othername ) {
 
 method from_string : common ($str) {
 
-}
-
-# interface compatible with thsi config format (r/w hopefully)
-method to_mutlivalue () {
-    ...;
-}
-
-method to_multival_short () {
+method to_str {
     my $str       = "subjectAltName=";
     my $metaclass = Object::Pad::MOP->for_caller;
     my @fields    = $metaclass->fields;

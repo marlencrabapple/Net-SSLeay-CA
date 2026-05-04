@@ -24,7 +24,7 @@ for (( i=0; i<${#keypairs[@]}; i+=2 )); do
 	
 	[[ $err  -ne 0 ]] || continue
         sbsign --key "$key" --cert "$cert" --output "$out.signed" "$_in" || exit $?
-	mv "$out.signed" $out
+	mv "$out.signed" "$out"
     done
 done
 

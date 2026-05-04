@@ -19,6 +19,7 @@ requires 'Time::Moment';
 requires 'Const::Fast::Exporter';
 requires 'File::chdir';
 requires 'Stream::Buffered';
+requires 'IPC::Nosh';
 
 on 'test' => sub {
     requires 'Module::Build::Tiny';

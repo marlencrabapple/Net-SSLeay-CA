@@ -10,8 +10,9 @@ done
 [[ -f "$CAtop/db/index" ]] || touch "$CAtop/db/index"
 [[ -f "$CAtop/db/serial" ]] || openssl rand -hex 16 >"$CAtop/db/serial"
 
-signingCA="$SIGNINGCA"
-signingCA_key="$SIGNINGCA_KEY"
+
+signingCA="${SIGNINGCA:-$ISSUER_CERT}"
+signingCA_key="${SIGNINGCA_KEY:-$ISSUER_KEY}"
 
 CArank="${CARANK:-Local}"
 CAinitial="${CAINITIAL:-X}"

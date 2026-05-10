@@ -29,3 +29,7 @@ cover_db/
 MYMETA.*
 
 /Net-SSLeay-CA-*
+
+._*
+.DS_Store
+*.{pem,p12,key,crt}

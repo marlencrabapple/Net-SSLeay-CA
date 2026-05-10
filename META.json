@@ -59,6 +59,7 @@
             "Exporter::Shiny" : "0",
             "Exporter::Tiny" : "0",
             "File::chdir" : "0",
+            "IPC::Nosh" : "0",
             "IPC::Run3" : "0",
             "List::Util" : "0",
             "Net::SSLeay" : "0",

@@ -58,7 +58,7 @@ authorityKeyIdentifier  = keyid:always
 basicConstraints        = critical,CA:true,pathlen:0
 crlDistributionPoints   = @crl_info
 extendedKeyUsage        = clientAuth,serverAuth
-keyUsage                = critical,keyCertSign,cRLSign
+keyUsage                = critical,keyCertSign,CRLSign
 nameConstraints         = @name_constraints
 subjectKeyIdentifier    = hash
 

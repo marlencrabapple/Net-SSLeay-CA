@@ -1,16 +1,6 @@
 [default]
-name                    = sub-ca-s1
-domain_suffix           = $ENV::DOMAINSUFFIX
-aia_url                 = http://$name.$domain_suffix/$name.crt
-crl_url                 = http://$name.$domain_suffix/$name.crl
-ocsp_url                = http://ocsp.$name.$domain_suffix:9081
 default_ca              = ca_default
 name_opt                = utf8,esc_ctrl,multiline,lname,align
-
-[ca_dn]
-countryName             = "US"
-organizationName        = "The Internette"
-commonName              = "cincotuf Intermediate CA RSA G1"
 
 [ca_default]
 home                    = $ENV::CATOP
@@ -63,12 +53,12 @@ extendedKeyUsage        = clientAuth
 keyUsage                = critical,digitalSignature
 subjectKeyIdentifier    = hash
 
-[crl_info]
-URI.0                   = $crl_url
+#[crl_info]
+#URI.0                   = $crl_url
 
-[issuer_info]
-caIssuers;URI.0         = $aia_url
-OCSP;URI.0              = $ocsp_url
+#[issuer_info]
+#caIssuers;URI.0         = $aia_url
+#OCSP;URI.0              = $ocsp_url
 
 [ocsp_ext]
 authorityKeyIdentifier  = keyid:always

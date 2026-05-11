@@ -45,22 +45,22 @@ utf8                    = yes
 string_mask             = utf8only
 prompt                  = no
 distinguished_name      = ca_dn
-req_extensions          = ca_ext
+#req_extensions          = root_ca_ext
 
-[ca_ext]
+[root_ca]
 basicConstraints        = critical,CA:true
 keyUsage                = critical,keyCertSign,cRLSign
 subjectKeyIdentifier    = hash
 
-[sub_ca_ext]
-authorityInfoAccess     = @issuer_info
-authorityKeyIdentifier  = keyid:always
-basicConstraints        = critical,CA:true,pathlen:0
-crlDistributionPoints   = @crl_info
-extendedKeyUsage        = clientAuth,serverAuth
-keyUsage                = critical,keyCertSign,CRLSign
-nameConstraints         = @name_constraints
-subjectKeyIdentifier    = hash
+#[intermediate_ca]
+#authorityInfoAccess     = @issuer_info
+#authorityKeyIdentifier  = keyid:always
+#basicConstraints        = critical,CA:true,pathlen:0
+#crlDistributionPoints   = @crl_info
+#extendedKeyUsage        = clientAuth,serverAuth
+#keyUsage                = critical,keyCertSign,CRLSign
+#nameConstraints         = @name_constraints
+#subjectKeyIdentifier    = hash
 
 #[crl_info]
 #URI.0                   = $crl_url

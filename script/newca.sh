@@ -10,7 +10,6 @@ done
 [[ -f "$CAtop/db/index" ]] || touch "$CAtop/db/index"
 [[ -f "$CAtop/db/serial" ]] || openssl rand -hex 16 >"$CAtop/db/serial"
 
-
 signingCA="${SIGNINGCA:-$ISSUER_CERT}"
 signingCA_key="${SIGNINGCA_KEY:-$ISSUER_KEY}"
 
@@ -88,9 +87,13 @@ CAargs=(-in "$CAtop/$newCAcsr"
   -days "${VALIDDAYS:-7305}")
 
 if [[ -n $signingCA ]] && [[ -n $signingCA_key ]]; then
-  CAargs+=(-cert "$signingCA" -keyfile "$signingCA_key")
+  CAargs+=(-cert "$signingCA"
+    -keyfile "$signingCA_key"
+    -extensions intermediate_ca)
 else
-  CAargs+=(-selfsign -keyfile "$CAtop/private/$newCAkey")
+  CAargs+=(-selfsign
+    -keyfile "$CAtop/private/$newCAkey"
+    -extensions root_ca)
 fi
 
 [[ -n $CLREXT ]] && CAargs+=(-clrext)

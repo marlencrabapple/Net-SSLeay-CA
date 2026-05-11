@@ -105,17 +105,36 @@ openssl_genpkey "$fnbase" "$pkeyalgo" "$PKEY_BITS"
 >&2 echo "  Wrote private key to '${fnbase-key.pem}' 🔚"
 
 >&2 echo "▶ Generating CSR..."
-csrfile="$fnbase-csr.pem"
->&2 echo "  Wrote private key to '${fnbase-key.pem}' 🔚"
 
+csrfile="$fnbase-csr.pem"
 openssl_req "$fnbase" "$csrfile"
 
->&2 echo "▶ Signing CSR..."
-openssl_x509_req "$csrfile" "${fnbase}-key.pem" "${fnbase}.pem"
->&2 echo "  Wrote certificate to '${fnbase}.pem' 🔚"
+>&2 echo "  Wrote CSR to '$csrfile' 🔚"
+>&2 echo ""
 
->&2 echo "▶ Output certificate info:"
-echo "======="
-openssl x509 -in "${fnbase}.pem" -text
-echo "======="
-echo ""
+>&2 echo "▶ Signing CSR..."
+
+openssl_x509_req "$csrfile" "${fnbase}-key.pem" "${fnbase}.pem"
+openssl_x509_req_exit="$?"
+
+if [[ $openssl_x509_req_exit -eq 0 ]]; then
+	>&2 echo "  Wrote certificate to '${fnbase}.pem' 🔚"
+
+	>&2 echo "⭕️ Successfully generated and signed a leaf certificate! 🎉"
+	>&2 echo "▶ Output certificate info:"
+
+	>&2 echo "======="
+
+	# I think I wasnt this to print to stdout...
+	openssl x509 -in "${fnbase}.pem" -text
+
+	>&2 echo "======="
+
+	>&2 echo ""
+
+else
+	>&2 echo "❌️ Encountered error processing/signing CSR:"
+	>&2 echo "▷ $csrfile"
+	# echo "Please include this file if you create a bug on our issue tracker:"
+	# echo "▷ https://"
+fi

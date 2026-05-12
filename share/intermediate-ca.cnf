@@ -1,8 +1,8 @@
-[default]
+[ default ]
 default_ca              = ca_default
 name_opt                = utf8,esc_ctrl,multiline,lname,align
 
-[ca_default]
+[ ca_default ]
 home                    = $ENV::CATOP
 database                = $home/db/index
 serial                  = $home/db/serial
@@ -18,7 +18,7 @@ default_crl_days        = 30
 default_md              = sha256
 policy                  = policy_c_o_match
 
-[policy_c_o_match]
+[ policy_c_o_match ]
 countryName             = match
 stateOrProvinceName     = optional
 organizationName        = match
@@ -26,7 +26,7 @@ organizationalUnitName  = optional
 commonName              = supplied
 emailAddress            = optional
 
-[req]
+[ req ]
 default_bits            = 2048
 encrypt_key             = yes
 default_md              = sha256
@@ -34,17 +34,28 @@ utf8                    = yes
 string_mask             = utf8only
 prompt                  = no
 distinguished_name      = ca_dn
+#req_extensions = ...
 
-[server_ext]
+[ subca_ext ]
+#authorityInfoAccess     = @issuer_info
+authorityKeyIdentifier  = keyid:always
+basicConstraints        = critical,CA:true,pathlen:0
+#crlDistributionPoints   = @crl_info
+#extendedKeyUsage        = clientAuth,serverAuth
+#keyUsage                = critical,keyCertSign,CRLSign
+#nameConstraints         = @name_constraints
+subjectKeyIdentifier    = hash
+
+[ server_ext ]
 authorityInfoAccess     = @issuer_info
 authorityKeyIdentifier  = keyid:always
 basicConstraints        = critical,CA:false
-crlDistributionPoints   = @crl_info
+#crlDistributionPoints   = @crl_info
 extendedKeyUsage        = clientAuth,serverAuth
 keyUsage                = critical,digitalSignature,keyEncipherment
 subjectKeyIdentifier    = hash
 
-[client_ext]
+[ client_ext ]
 authorityInfoAccess     = @issuer_info
 authorityKeyIdentifier  = keyid:always
 basicConstraints        = critical,CA:false
@@ -53,14 +64,14 @@ extendedKeyUsage        = clientAuth
 keyUsage                = critical,digitalSignature
 subjectKeyIdentifier    = hash
 
-#[crl_info]
+#[ crl_info ]
 #URI.0                   = $crl_url
 
-#[issuer_info]
+#[ issuer_info ]
 #caIssuers;URI.0         = $aia_url
 #OCSP;URI.0              = $ocsp_url
 
-[ocsp_ext]
+[ ocsp_ext ]
 authorityKeyIdentifier  = keyid:always
 basicConstraints        = critical,CA:false
 extendedKeyUsage        = OCSPSigning

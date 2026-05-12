@@ -1,19 +1,9 @@
 
-[default]
-#name                    = x1
-#domain_suffix           = cincotuf.lan
-#aia_url                 = http://$name.$domain_suffix/$name.crt
-#crl_url                 = http://$name.$domain_suffix/$name.crl
-#ocsp_url                = http://ocsp.$name.$domain_suffix:9080
+[ default ]
 default_ca              = ca_default
 name_opt                = utf8,esc_ctrl,multiline,lname,align
 
-#[ca_dn]
-#countryName             = "US"
-#organizationName        = "The Internette"
-#commonName              = "cincotuf Root CA RSA G1"
-
-[ca_default]
+[ ca_default ]
 home                    = $ENV::CATOP
 database                = $home/db/index
 serial                  = $home/db/serial
@@ -29,7 +19,7 @@ default_crl_days        = 365
 default_md              = sha256
 policy                  = policy_c_o_match
 
-[policy_c_o_match]
+[ policy_c_o_match ]
 countryName             = match
 stateOrProvinceName     = optional
 organizationName        = match
@@ -37,7 +27,7 @@ organizationalUnitName  = optional
 commonName              = supplied
 emailAddress            = optional
 
-[req]
+[ req ]
 default_bits            = 4096
 encrypt_key             = yes
 default_md              = sha256
@@ -45,14 +35,15 @@ utf8                    = yes
 string_mask             = utf8only
 prompt                  = no
 distinguished_name      = ca_dn
-#req_extensions          = root_ca_ext
+#req_extensions          = rootca_ext # Or should this be ca_ext or subca_ext
+                                      # by default?
 
-[root_ca]
+[ rootca_ext ]
 basicConstraints        = critical,CA:true
 keyUsage                = critical,keyCertSign,cRLSign
 subjectKeyIdentifier    = hash
 
-#[intermediate_ca]
+#[ subca_ext ]
 #authorityInfoAccess     = @issuer_info
 #authorityKeyIdentifier  = keyid:always
 #basicConstraints        = critical,CA:true,pathlen:0
@@ -62,23 +53,3 @@ subjectKeyIdentifier    = hash
 #nameConstraints         = @name_constraints
 #subjectKeyIdentifier    = hash
 
-#[crl_info]
-#URI.0                   = $crl_url
-
-#[issuer_info]
-#caIssuers;URI.0         = $aia_url
-#OCSP;URI.0              = $ocsp_url
-
-#[name_constraints]
-#permitted;DNS.0=cincotuf.lan
-#permitted;DNS.1=*.cincotuf.lan
-#excluded;IP.0=0.0.0.0/0.0.0.0
-#excluded;IP.1=0:0:0:0:0:0:0:0/0:0:0:0:0:0:0:0
-
-[ocsp_ext]
-authorityKeyIdentifier  = keyid:always
-basicConstraints        = critical,CA:false
-extendedKeyUsage        = OCSPSigning
-noCheck                 = yes
-keyUsage                = critical,digitalSignature
-subjectKeyIdentifier    = hash

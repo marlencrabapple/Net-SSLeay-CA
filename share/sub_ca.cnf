@@ -7,21 +7,20 @@ home                    = $ENV::CATOP
 database                = $home/db/index
 serial                  = $home/db/serial
 crlnumber               = $home/db/crlnumber
-certificate             = $home/subcacert.pem
-private_key             = $home/private/subcakey.pem
+certificate             = $home/cacert.pem
+private_key             = $home/private/cakey.pem
 RANDFILE                = $home/private/random
 new_certs_dir           = $home/certs
 unique_subject          = no
-copy_extensions         = copy
-default_days            = 365
-default_crl_days        = 30
+default_days            = 3650
+default_crl_days        = 365
 default_md              = sha256
 policy                  = policy_c_o_match
 
 [ policy_c_o_match ]
-countryName             = match
+countryName             = supplied
 stateOrProvinceName     = optional
-organizationName        = match
+organizationName        = supplied
 organizationalUnitName  = optional
 commonName              = supplied
 emailAddress            = optional
@@ -34,17 +33,19 @@ utf8                    = yes
 string_mask             = utf8only
 prompt                  = no
 distinguished_name      = ca_dn
-#req_extensions = ...
+copy_extensions = copy
+req_extensions = subca_ext
 
 [ subca_ext ]
 #authorityInfoAccess     = @issuer_info
 authorityKeyIdentifier  = keyid:always
 basicConstraints        = critical,CA:true,pathlen:0
 #crlDistributionPoints   = @crl_info
-#extendedKeyUsage        = clientAuth,serverAuth
-#keyUsage                = critical,keyCertSign,CRLSign
+extendedKeyUsage        = clientAuth,serverAuth
+keyUsage                = critical,keyCertSign,cRLSign
 #nameConstraints         = @name_constraints
 subjectKeyIdentifier    = hash
+
 
 [ server_ext ]
 authorityInfoAccess     = @issuer_info

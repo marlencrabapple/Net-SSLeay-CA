@@ -1,115 +1,117 @@
 #!/usr/bin/env perl
-package Net::SSLeay::CA::fatpack;
 
 use utf8;
 use v5.40;
 
 use lib 'lib';
 
-use Cwd;
+use Fcntl qw'S_IXUSR S_IXGRP S_IXOTH S_IRUSR S_IRGRP S_IROTH';
+use Cwd 'abs_path';
 use File::chdir;
 use Path::Tiny;
-use Getopt::Long
-  qw(GetOptionsFromArray :config no_ignore_case bundling auto_abbrev);
-use IPC::Run3;
-use Data::Dumper;
+use List::Util 'none';
+use Getopt::Long qw(GetOptionsFromArray :config no_ignore_case auto_abbrev);
 
-use Net::SSLeay::CA::Util::Cmd;
+use IPC::Nosh;
+use IPC::Nosh::Common;
 
-our $modroot  = path('./')->absolute;
-our $input    = path("$modroot/script");
-our $outdir   = path( "$modroot/fatpackout." . time );
-our $outfn    = "%s.fat";
+our $modroot  = path(abs_path);
+our @input    = ( path("$modroot/script")->children );
+our $outdir   = path('./bin');
+our $outfn    = '%s';
 our $locallib = path("$modroot/local");
 our $verbose  = 1;
 our $debug    = $verbose;
 
-say STDERR Dumper( { '$ENV{PERL5LIB}' => $ENV{PERL5LIB} } )
-  if $ENV{DEBUG} || $verbose || $debug;
+our $patharg = sub ( $arg, %opt ) {
+    $arg = path($arg)->assert(
+        sub {
+            $opt{assert} && $opt{assert} isa CODE ? $opt{assert}->(@_) : 1;
+        }
+    ) unless $arg isa Path::Tiny;
 
-GetOptions(
-    'input|file|script|=s',
-    'outdir|fatpack-out=s',
-    'outfilename|outfn|fnfmt|fmtfn|fmt-filename|fmt-outputfn=s',
-    'modroot|module-root|module-dir=s',
-    'locallib=s',
-    'verbose+',
-    'debug'
+    if ( my $dest = $opt{dest} ) {
+
+        if ( my $type = ref $dest ) {
+            if ( $type eq 'ARRAY' ) {
+                push @$dest, $arg
+                  if none { $arg->absolute eq $_->absolute } @input;
+            }
+            elsif ( $type eq 'SCALAR' ) {
+                $$dest = $arg;
+            }
+        }
+        else {
+            fatal '$dest must be a SCALAR, ARRAY, or CODE reference!';
+            dmsg( $arg, $dest );
+        }
+    }
+};
+
+our %clidest = (
+    modroot  => \$modroot,
+    input    => [],
+    outdir   => \$outdir,
+    outfn    => \$outfn,
+    locallib => \$locallib,
+    verbose  => \$verbose,
+    debug    => \$debug
 );
 
-sub writeh ( $line, $handle, %opt ) {
-    binmode $handle, ":encoding(UTF-8)";
-    if ( $line isa 'ARRAY' ) {
-        say $handle $line for $handle->@*;
-    }
-    elsif ( !ref $line ) {
-        say $handle $line;
-    }
-}
+GetOptions(
+    \%clidest,
+    'input|file|infile|infname|script=s{,}',
+    => sub {
+        $patharg->( shift, dest => \@input );
+    },
+    'outdir|fatpack-out=s',
+    'outfn|outfname|out-filename|fnfmt|fmtfn|fmt-filename|fmt-outputfn=s',
+    'modroot|module-root|module-dir=s',
+    'locallib=s{,}',
+    'verbose+',
+    'debug',
+    '<>' => sub ($in) { $patharg->( $in, dest => \@input ) }
+);
 
-sub outh ($line) {
-    writeh( $line, *STDOUT );
-}
-
-sub errh ($line) {
-    writeh( $line, *STDERR );
-}
-
-sub info ($line) {
-    outh("▶ $line");
-}
-
-sub err ($line) {
-    errh("❌️ $line");
-}
-
-sub fatal ( $line, $status = $? // 255, %opt ) {
-    err($line);
-    exit $status;
-}
-
-sub success ($line) {
-    outh("⭕️ $line");
-}
+my $cliopt_deref = {
+    map {
+        my $ref = ref $clidest{$_};
+        ( $_ => ( $ref eq 'SCALAR' ? $clidest{$_}->$* : $clidest{$_} ) )
+    } ( keys %clidest )
+};
 
 sub fatpack {
     $CWD = $modroot;
-    run3( [qw(carmel install)] );
-    run3( [qw(carmel package)] );
-    run3( [qw(carmel rollout)] );
+    run( [qw(carton install)] );
 
     $ENV{PERL5LIB} = "$locallib:$modroot/lib";
 
     $outdir->mkdir unless -d $outdir;
+    dmsg(@input);
+    foreach my $in ( map { $_->is_dir ? ( $_->children ) : $_ } @input ) {
 
-    foreach my $in (
-          $input->is_dir     ? $input->children
-        : $input isa 'ARRAY' ? @$input
-        :                      $input
-      )
-    {
         #fatpack($in->children) if $in->is_dir;
-
-        my $fatstr = "";
-        my @cmd    = ( qw(fatpack pack), $in );
+        my $fatline = [];
+        my $fatstr  = "";
+        my @cmd     = ( qw(fatpack pack), $in );
 
         binmode STDERR, ":encoding(UTF-8)";
         info( "Running " . join " ", @cmd );
 
-        run3( \@cmd, \undef, \$fatstr );
+        my $run = run( \@cmd, out => $fatline, autochomp => 1 );
 
-        my $fatout = sprintf( ( $outfn || '%s.fat' ), $in->basename );
+        #dmsg($run);
 
-        if ( my $ext = $in->basename =~ /\.(pl)$/i ) {
-            $fatout .= ".$ext";
-        }
-        else {
-            $fatout .= ".pl";
-        }
+        $fatstr = join "\n", $run->out->lines_utf8;
 
-        path("$outdir/$fatout")->spew_utf8($fatstr);
+        my $fatout = $in->basename;
+        $fatout = path("$outdir/$fatout")->spew_utf8($fatstr);
 
-        success("Written to $fatout");
+        # S_IXOTH  (00001)  execute/search by others
+        $fatout->chmod(
+            S_IRUSR | S_IRGRP | S_IROTH | S_IXUSR | S_IXGRP | S_IXOTH );
+
+        success("Written to: $fatout");
     }
 }
 

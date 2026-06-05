@@ -1,0 +1,37 @@
+#
+# Default configuration file for catool <
+#
+# Run `catool newca --from-config` to generate a working 2-tier CA hierarchy
+# suitable for most uses (provided the file is unmodified)
+#
+
+[default_ca]
+parent_ca = "root_ca" # a key from this config file with the issuing CA
+# configuration
+
+#parent_certfile="" # for signing this CA and generating fullchain.pem bundle
+#parent_keyfile="" # for signing this CA if not already created
+#csr="" # path to a user provided CSR
+
+catop = "<: $xdg.data_home() :>/.local/ca" # all files are relative to this
+# path unless absolute paths themselves
+
+certfile = "<: $subj_cn.slug() :>.pem"
+keyfile = "private/<: $subj_cn.slug() :>-key.pem"
+subj_cn = "<: whoami() :>@<: hostfqdn() :> Intermediate CA"
+
+config = "/etc/catool/cnf/sub_ca.cnf"
+req_config = "/etc/catool/leaf_server.cnf"
+
+[root_ca]
+user = "root" # create/store as a privileged user
+#set_user = "root" # or change ownership
+
+catop = "/etc/catool"
+certfile = "/var/lib/catool/rootca.pem"
+keyfile = "/var/lib/private/catool/rootca-key.pem"
+
+subj_cn = "<: $hostfqdn :> Root CA"
+
+config = "/etc/catool/cnf/root_ca.pem"
+#req_config = "/etc/catool/cnf/sub_ca.cnf"

@@ -82,6 +82,7 @@ x509args=(-in "$templateCA" -x509toreq
   -out "$CAtop/$newCAcsr"
   -set_subject "$subjstr"
   -key "$CAtop/private/$newCAkey"
+	-copy_extensions copyall
 )
 
 [[ -n $CLREXT ]] && x509args+=(-clrext)
@@ -95,9 +96,7 @@ echo "▶ Self-signing newly minted certificate:"
 
 CAargs=(-in "$CAtop/$newCAcsr"
   -verbose
-  # -copy_extensions copyall
   -out "$CAtop/$newCAcert"
-  #-subj "/CN=$subj_cn/O=$cnorg/OU=${SUBJ_OU:-Local User}/C=${SUBJ_C:-US}/"
   -subj "$subjstr"
   -notext -rand_serial -utf8
   -days "${VALIDDAYS:-7305}")

@@ -1,2 +1,1 @@
-[v3_ca]
-subjectAlternatativeName = $ENV::SAN
+[ req ]

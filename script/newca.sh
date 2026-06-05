@@ -3,6 +3,10 @@
 
 _hostfqdn=""
 
+info() {
+	>&2 echo -e "▶ $1"
+}
+
 hostfqdn() {
   [[ -z "$_hostfqdn" ]] && _hostfqdn="$(perl \
     -Mv5.40 \
@@ -56,7 +60,7 @@ newCAcsr="$newCAbase${SANHOSTS[*]:+"+${#SANHOSTS[*]}"}.csr"
 newCAcert="${newCAcsr/%csr/pem}"
 newCAkey="${newCAcert/%.pem/-key.pem}"
 
-echo "▶ Generating private key ($keyalgo $keybits):"
+info "Generating private key ($keyalgo $keybits):"
 
 [[ ${KEYNOPASS:-0} -ne 0 ]] && echo -e "‼️ WARNING: You are creating a CA \
     key without a passphrase or other means of protection. This is incredibly \
@@ -73,8 +77,8 @@ openssl genpkey -algorithm "${pkeyconf[*]:0:1}" -pkeyopt "${pkeyconf[*]:1:1}" \
 #     head -n 1)" \
 # -out "$newCAkey"
 
-echo -e "▶ Using '$(basename "$templateCA")' as a template for your CA certificate:\n"
-echo -e "▶ Replacing fields with configured options with distinguising details from your local session as defaults/fallback values.\n"
+info "Using '$(basename "$templateCA")' as a template for your CA certificate:\n"
+info "Replacing fields with configured options with distinguising details from your local session as defaults/fallback values.\n"
 
 subjstr="/CN=$subj_cn/O=$subj_o/OU=$subj_ou/C=$subj_c/"
 
@@ -92,7 +96,7 @@ x509args=(-in "$templateCA" -x509toreq
 
 openssl x509 "${x509args[@]}"
 
-echo "▶ Self-signing newly minted certificate:"
+info "Self-signing newly minted certificate:"
 
 CAargs=(-in "$CAtop/$newCAcsr"
   -verbose
@@ -117,9 +121,8 @@ fi
 [[ -n $OPENSSL_CONFIG ]] && CAargs+=(-config "$OPENSSL_CONFIG")
 
 openssl ca "${CAargs[@]}"
-
-echo "☆彡・SUCCESS!・☆彡"
-echo -e "\nSucessfully generated and signed certificate authority at:\n"
-echo -e "▶ 《$CAtop/$newCAcert》\n"
-
 openssl x509 -in "$CAtop/$newCAcert" -text
+
+echo "☆彡・Success!・☆彡"
+echo -e "▶ Sucessfully generated and signed certificate authority at:\n"
+echo "$CAtop/$newCAcert"

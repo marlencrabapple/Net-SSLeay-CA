@@ -1,14 +1,14 @@
 use Object::Pad ':experimental(:all)';
 
-package Net::SSLeay::CA::SAN;
+package Net::SSLeay::CA::Certificate::SAN;
 
-class Net::SSLeay::CA::SAN : does(Net::SSLeay::CA::Base);
+class Net::SSLeay::CA::Certficate::SAN : does(Net::SSLeay::CA::Base);
 
 use utf8;
 use v5.40;
 
 use URI;
-use Socket;
+use IO::Handle::Common;
 
 # use Net::SSLeay;
 # use Net::SSLeay::CA::Util;
@@ -32,7 +32,7 @@ ADJUST : params (:$uri, :$ip, :$email, :$dns, :$rid, :$dirname, :$othername ) {
 #     $self;
 # }
 
-method from_string : common ($str) {
+method from_string : common ($str) { }
 
 method to_str {
     my $str       = "subjectAltName=";
@@ -43,6 +43,7 @@ method to_str {
 
     my $i = 0;
 
+    # TODO: handle othername
     foreach my ( $k, $v ) ( map { $_->name, $_->value } @fields ) {
         my $vstr = '';
         if ( scalar @$v > 1 ) {

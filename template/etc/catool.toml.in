@@ -1,8 +1,11 @@
 #
-# Default configuration file for catool <
+# Default global configuration file for catool [% version() %]
 #
 # Run `catool newca --from-config` to generate a working 2-tier CA hierarchy
-# suitable for most uses (provided the file is unmodified)
+# suitable for most uses (provided the file is unmodified). Values can contain
+# special variables and functions that will be replaced when the configuration
+# file is validated. See `man(1) catool` or `catool help config` for further
+# information.
 #
 
 [default_ca]
@@ -13,12 +16,12 @@ parent_ca = "root_ca" # a key from this config file with the issuing CA
 #parent_keyfile="" # for signing this CA if not already created
 #csr="" # path to a user provided CSR
 
-catop = "<: $xdg.data_home() :>/.local/ca" # all files are relative to this
+catop = "<: $data_home :>" # all files are relative to this
 # path unless absolute paths themselves
 
 certfile = "<: $subj_cn.slug() :>.pem"
 keyfile = "private/<: $subj_cn.slug() :>-key.pem"
-subj_cn = "<: whoami() :>@<: hostfqdn() :> Intermediate CA"
+subj_cn = "<: $user :>@<: $hostfqdn :> Intermediate CA"
 
 config = "/etc/catool/cnf/sub_ca.cnf"
 req_config = "/etc/catool/leaf_server.cnf"

@@ -5,8 +5,9 @@ set -o noclobber
 
 # [[ -z "$CATOP" ]] && CATOP="./$(basename "$0")-$(date +%s)"
 # [[ -d "$CATOP" ]] && >&2 echo "❌️ '$CATOP' already exists!"
-CATOP="./$(basename "$0")-$(date +%s)"
-[[ -d "$CATOP" ]] || mkdir -p "$CATOP"
+[[ -z "$CATOP" ]] && CATOP="./$(basename "$0")-$(date +%s)"
+[[ -d "$CATOP" ]] && >&2 echo "❌️ '$CATOP' already exists!" && exit 1
+[[ ! -d "$CATOP" ]] || mkdir -p "$CATOP"
 
 SUBJ_CN="${ROOTCA_SUBJ_CN:-$SUBJ_CN}"
 [[ -z "$SUBJ_CN" ]] && SUBJ_CN="$(hostname) Root CA"

@@ -14,8 +14,8 @@ use File::XDG;
 use Text::Xslate;
 use Const::Fast;
 
-const our $default_config = [qw'/etc/catool/catool.toml'];
-const our $path_key       = [
+const our $default_config => [qw'/etc/catool/catool.toml'];
+const our $path_key => [
     qw'catop certfile keyfile config req_config parent_certfile parent_keyfile csr'
 ];
 

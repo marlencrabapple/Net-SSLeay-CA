@@ -10,10 +10,15 @@ use v5.40;
 use parent 'Exporter';
 use vars '@EXPORT_OK';
 
-@EXPORT_OK = qw(hostfqdn domainname localuser);
+@EXPORT_OK = qw(hostfqdn domainname localuser slugify);
 
 use List::Util 'first';
 use Net::Domain;
+
+sub slugify( $in, %opt ) {
+    $opt{replace} //= '_';
+    ( $in =~ s/[^a-z0-9_.+=-]+/$opt{replace}/gir );
+}
 
 sub user_faux_mail {
     first { /\.[^.]+$/ } @Net::Domain::{qw(hostfqdn domainname make_anonymous)};

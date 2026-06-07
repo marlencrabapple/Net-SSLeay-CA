@@ -6,6 +6,13 @@ set -Ce
 subjcn_def="$(whoami)@$(hostname)"
 readonly subjcn_def
 
+function slugify {
+	in="$1"
+	perl -Mv5.40 -MNet::SSLeay::CA::Util \
+	-e 'map { chomp $_; Net::SSLeay::CA::Util::slugify($_) } (@ARGV)' \
+	"$in"
+}
+
 function openssl_genpkey {
 	# typeset -a argv=("$@")
 	typeset -a openssl_genpkey_arg=()

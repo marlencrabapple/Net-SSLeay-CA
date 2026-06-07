@@ -3,6 +3,13 @@
 
 _hostfqdn=""
 
+slugify() {
+	in="$1"
+	perl -Mv5.40 -MNet::SSLeay::CA::Util \
+	-e 'map { chomp $_; Net::SSLeay::CA::Util::slugify($_) } (@ARGV)' \
+	"$in"
+}
+
 info() {
 	>&2 echo -e "▶ $1"
 }
@@ -55,7 +62,7 @@ subj_o="${SUBJ_O:-$(hostfqdn)}"
 # subj_ou="${SUBJ_OU:-Local User}"
 subj_c="${SUBJ_C:-US}"
 
-newCAbase="$(perl -Mv5.40 -e 'say shift =~ s/\s/_/rg' "$subj_cn")"
+newCAbase="$(slugify "$subj_cn")"
 newCAcsr="$newCAbase${SANHOSTS[*]:+"+${#SANHOSTS[*]}"}.csr"
 newCAcert="${newCAcsr/%csr/pem}"
 newCAkey="${newCAcert/%.pem/-key.pem}"

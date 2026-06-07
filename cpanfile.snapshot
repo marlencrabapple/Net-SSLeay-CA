@@ -16,7 +16,7 @@ DISTRIBUTIONS
       File::Spec::Unix 0
       Getopt::Long 0
       perl 5.008000
-  App-cpanminus-1.7907
+  App-cpanminus-1.7907-TRIAL
     pathname: M/MI/MIYAGAWA/App-cpanminus-1.7907-TRIAL.tar.gz
     provides:
       App::cpanminus 1.7907
@@ -34,6 +34,12 @@ DISTRIBUTIONS
     pathname: R/RS/RSHERER/Class-Data-Inheritable-0.10.tar.gz
     provides:
       Class::Data::Inheritable 0.10
+    requirements:
+      ExtUtils::MakeMaker 0
+  Class-Exporter-0.03
+    pathname: S/SP/SPLICE/Class-Exporter-0.03.tar.gz
+    provides:
+      Class::Exporter 0.03
     requirements:
       ExtUtils::MakeMaker 0
   Class-Inspector-1.36
@@ -137,6 +143,18 @@ DISTRIBUTIONS
       PadWalker 0.13
       Scalar::Util 0
       Test::More 0
+  Data-MessagePack-1.02
+    pathname: S/SY/SYOHEX/Data-MessagePack-1.02.tar.gz
+    provides:
+      Data::MessagePack 1.02
+      Data::MessagePack::Boolean undef
+      Data::MessagePack::PP undef
+    requirements:
+      ExtUtils::CBuilder 0
+      Math::BigInt 1.89
+      Module::Build 0.4005
+      Module::Build::XSUtil 0.19
+      perl 5.008001
   Data-OptList-0.114
     pathname: R/RJ/RJBS/Data-OptList-0.114.tar.gz
     provides:
@@ -219,14 +237,6 @@ DISTRIBUTIONS
       perl 5.008001
       strict 0
       warnings 0
-  Exporter-Tiny-1.006003
-    pathname: T/TO/TOBYINK/Exporter-Tiny-1.006003.tar.gz
-    provides:
-      Exporter::Shiny 1.006003
-      Exporter::Tiny 1.006003
-    requirements:
-      ExtUtils::MakeMaker 6.17
-      perl 5.006001
   ExtUtils-CChecker-0.12
     pathname: P/PE/PEVANS/ExtUtils-CChecker-0.12.tar.gz
     provides:
@@ -332,6 +342,16 @@ DISTRIBUTIONS
       ExtUtils::MakeMaker 0
       base 0
       perl 5.006
+  File-XDG-1.03
+    pathname: P/PL/PLICEASE/File-XDG-1.03.tar.gz
+    provides:
+      File::XDG 1.03
+    requirements:
+      ExtUtils::MakeMaker 0
+      File::Path 2.07
+      Path::Tiny 0
+      Ref::Util 0
+      perl 5.006
   File-chdir-0.1011
     pathname: D/DA/DAGOLDEN/File-chdir-0.1011.tar.gz
     provides:
@@ -397,6 +417,43 @@ DISTRIBUTIONS
       XS::Parse::Sublike 0.31
       XS::Parse::Sublike::Builder 0.31
       perl 5.016
+  IO-Handle-Common-0.01-TRIAL
+    pathname: C/CR/CRABAPP/IO-Handle-Common-0.01-TRIAL.tar.gz
+    provides:
+      IO::Handle::Common 0.01
+      IO::Handle::Common::Handle undef
+    requirements:
+      Const::Fast 0
+      Data::Dumper::Names 0
+      Devel::StackTrace::WithLexicals 0
+      FileHandle 0
+      IO::Handle 0
+      List::Util 0
+      Module::Build::Tiny 0.034
+      PadWalker 0
+      Path::Tiny 0
+      perl v5.40.0
+  IPC-Nosh-0.01-TRIAL
+    pathname: C/CR/CRABAPP/IPC-Nosh-0.01-TRIAL.tar.gz
+    provides:
+      IPC::Nosh 0.01
+      IPC::Nosh::Common undef
+      IPC::Nosh::Handle undef
+      IPC::Nosh::Mux undef
+    requirements:
+      Class::Exporter 0
+      Const::Fast 0
+      Data::Dumper::Names 0
+      Devel::StackTrace::WithLexicals 0
+      IO::Handle 0
+      IPC::Run3 0
+      Module::Build::Tiny 0.034
+      Object::Pad 0
+      Path::Tiny 0
+      Regexp::Common 0
+      Syntax::Keyword::Defer 0
+      Syntax::Keyword::Dynamically 0
+      perl v5.40.0
   IPC-Run-20250809.0
     pathname: N/NJ/NJM/IPC-Run-20250809.0.tar.gz
     provides:
@@ -717,6 +774,45 @@ DISTRIBUTIONS
       Sub::Defer 2.006006
       Sub::Quote 2.006006
       perl 5.006
+  Mouse-v2.6.2
+    pathname: S/SY/SYOHEX/Mouse-v2.6.2.tar.gz
+    provides:
+      Mouse v2.6.2
+      Mouse::Exporter undef
+      Mouse::Meta::Attribute undef
+      Mouse::Meta::Class undef
+      Mouse::Meta::Method undef
+      Mouse::Meta::Method::Accessor undef
+      Mouse::Meta::Method::Constructor undef
+      Mouse::Meta::Method::Delegation undef
+      Mouse::Meta::Method::Destructor undef
+      Mouse::Meta::Module undef
+      Mouse::Meta::Role undef
+      Mouse::Meta::Role::Application undef
+      Mouse::Meta::Role::Application::RoleSummation undef
+      Mouse::Meta::Role::Composite undef
+      Mouse::Meta::Role::Method undef
+      Mouse::Meta::TypeConstraint undef
+      Mouse::Object undef
+      Mouse::PurePerl undef
+      Mouse::Role v2.6.2
+      Mouse::Spec v2.6.2
+      Mouse::Tiny v2.6.1
+      Mouse::TypeRegistry undef
+      Mouse::Util v2.6.2
+      Mouse::Util::MetaRole undef
+      Mouse::Util::TypeConstraints undef
+      Squirrel undef
+      Squirrel::Role undef
+      Test::Mouse undef
+      ouse undef
+    requirements:
+      ExtUtils::CBuilder 0
+      Module::Build 0.4005
+      Module::Build::XSUtil 0.19
+      Scalar::Util 1.14
+      XSLoader 0.02
+      perl 5.010001
   Net-SSLeay-1.94
     pathname: C/CH/CHRISN/Net-SSLeay-1.94.tar.gz
     provides:
@@ -1468,6 +1564,26 @@ DISTRIBUTIONS
     requirements:
       Module::Build::Tiny 0.035
       perl 5.005
+  Ref-Util-0.204
+    pathname: A/AR/ARC/Ref-Util-0.204.tar.gz
+    provides:
+      Ref::Util 0.204
+      Ref::Util::PP 0.204
+    requirements:
+      Exporter 5.57
+      ExtUtils::MakeMaker 0
+      Ref::Util::XS 0
+      Text::ParseWords 0
+      perl 5.006
+  Ref-Util-XS-0.117
+    pathname: X/XS/XSAWYERX/Ref-Util-XS-0.117.tar.gz
+    provides:
+      Ref::Util::XS 0.117
+    requirements:
+      Exporter 5.57
+      ExtUtils::MakeMaker 0
+      XSLoader 0
+      perl 5.006
   Regexp-Common-2024080801
     pathname: A/AB/ABIGAIL/Regexp-Common-2024080801.tar.gz
     provides:
@@ -1528,17 +1644,6 @@ DISTRIBUTIONS
       Exporter 5.57
       ExtUtils::MakeMaker 0
       Scalar::Util 0
-      perl 5.006
-  Scalar-List-Utils-1.70
-    pathname: P/PE/PEVANS/Scalar-List-Utils-1.70.tar.gz
-    provides:
-      List::Util 1.70
-      List::Util::XS 1.70
-      Scalar::List::Utils 1.70
-      Scalar::Util 1.70
-      Sub::Util 1.70
-    requirements:
-      ExtUtils::MakeMaker 0
       perl 5.006
   Software-License-0.104007
     pathname: L/LE/LEONT/Software-License-0.104007.tar.gz
@@ -1611,16 +1716,6 @@ DISTRIBUTIONS
       parent 0
       perl 5.008001
       version 0
-  Stream-Buffered-0.03
-    pathname: D/DO/DOY/Stream-Buffered-0.03.tar.gz
-    provides:
-      Stream::Buffered 0.03
-      Stream::Buffered::Auto undef
-      Stream::Buffered::File undef
-      Stream::Buffered::PerlIO undef
-    requirements:
-      ExtUtils::MakeMaker 6.30
-      IO::File 1.14
   String-Format-1.18
     pathname: S/SR/SREZIC/String-Format-1.18.tar.gz
     provides:
@@ -1690,16 +1785,6 @@ DISTRIBUTIONS
       XS::Parse::Keyword 0.13
       XS::Parse::Keyword::Builder 0.13
       perl 5.014
-  Syntax-Keyword-MultiSub-0.05
-    pathname: P/PE/PEVANS/Syntax-Keyword-MultiSub-0.05.tar.gz
-    provides:
-      Syntax::Keyword::MultiSub 0.05
-    requirements:
-      ExtUtils::CBuilder 0
-      Module::Build 0.4004
-      XS::Parse::Sublike 0.15
-      XS::Parse::Sublike::Builder 0.15
-      perl 5.026
   TOML-0.97
     pathname: K/KA/KARUPA/TOML-0.97.tar.gz
     provides:
@@ -1813,224 +1898,6 @@ DISTRIBUTIONS
       Test::Builder::Module 0
       Test::More 0.47
       perl 5.006
-  Test-Simple-1.302219
-    pathname: E/EX/EXODIST/Test-Simple-1.302219.tar.gz
-    provides:
-      Test2 1.302219
-      Test2::API 1.302219
-      Test2::API::Breakage 1.302219
-      Test2::API::Context 1.302219
-      Test2::API::Instance 1.302219
-      Test2::API::InterceptResult 1.302219
-      Test2::API::InterceptResult::Event 1.302219
-      Test2::API::InterceptResult::Facet 1.302219
-      Test2::API::InterceptResult::Hub 1.302219
-      Test2::API::InterceptResult::Squasher 1.302219
-      Test2::API::Stack 1.302219
-      Test2::AsyncSubtest 1.302219
-      Test2::AsyncSubtest::Event::Attach 1.302219
-      Test2::AsyncSubtest::Event::Detach 1.302219
-      Test2::AsyncSubtest::Formatter 1.302219
-      Test2::AsyncSubtest::Hub 1.302219
-      Test2::Bundle 1.302219
-      Test2::Bundle::Extended 1.302219
-      Test2::Bundle::More 1.302219
-      Test2::Bundle::Simple 1.302219
-      Test2::Compare 1.302219
-      Test2::Compare::Array 1.302219
-      Test2::Compare::Bag 1.302219
-      Test2::Compare::Base 1.302219
-      Test2::Compare::Bool 1.302219
-      Test2::Compare::Custom 1.302219
-      Test2::Compare::DeepRef 1.302219
-      Test2::Compare::Delta 1.302219
-      Test2::Compare::Event 1.302219
-      Test2::Compare::EventMeta 1.302219
-      Test2::Compare::Float 1.302219
-      Test2::Compare::Hash 1.302219
-      Test2::Compare::Isa 1.302219
-      Test2::Compare::Meta 1.302219
-      Test2::Compare::Negatable 1.302219
-      Test2::Compare::Number 1.302219
-      Test2::Compare::Object 1.302219
-      Test2::Compare::OrderedSubset 1.302219
-      Test2::Compare::Pattern 1.302219
-      Test2::Compare::Ref 1.302219
-      Test2::Compare::Regex 1.302219
-      Test2::Compare::Scalar 1.302219
-      Test2::Compare::Set 1.302219
-      Test2::Compare::String 1.302219
-      Test2::Compare::Undef 1.302219
-      Test2::Compare::Wildcard 1.302219
-      Test2::Env 1.302219
-      Test2::Event 1.302219
-      Test2::Event::Bail 1.302219
-      Test2::Event::Diag 1.302219
-      Test2::Event::Encoding 1.302219
-      Test2::Event::Exception 1.302219
-      Test2::Event::Fail 1.302219
-      Test2::Event::Generic 1.302219
-      Test2::Event::Note 1.302219
-      Test2::Event::Ok 1.302219
-      Test2::Event::Pass 1.302219
-      Test2::Event::Plan 1.302219
-      Test2::Event::Skip 1.302219
-      Test2::Event::Subtest 1.302219
-      Test2::Event::TAP::Version 1.302219
-      Test2::Event::V2 1.302219
-      Test2::Event::Waiting 1.302219
-      Test2::EventFacet 1.302219
-      Test2::EventFacet::About 1.302219
-      Test2::EventFacet::Amnesty 1.302219
-      Test2::EventFacet::Assert 1.302219
-      Test2::EventFacet::Control 1.302219
-      Test2::EventFacet::Error 1.302219
-      Test2::EventFacet::Hub 1.302219
-      Test2::EventFacet::Info 1.302219
-      Test2::EventFacet::Info::Table 1.302219
-      Test2::EventFacet::Meta 1.302219
-      Test2::EventFacet::Parent 1.302219
-      Test2::EventFacet::Plan 1.302219
-      Test2::EventFacet::Render 1.302219
-      Test2::EventFacet::Trace 1.302219
-      Test2::Formatter 1.302219
-      Test2::Formatter::TAP 1.302219
-      Test2::Handle 1.302219
-      Test2::Hub 1.302219
-      Test2::Hub::Interceptor 1.302219
-      Test2::Hub::Interceptor::Terminator 1.302219
-      Test2::Hub::Subtest 1.302219
-      Test2::IPC 1.302219
-      Test2::IPC::Driver 1.302219
-      Test2::IPC::Driver::Files 1.302219
-      Test2::Manual 1.302219
-      Test2::Manual::Anatomy 1.302219
-      Test2::Manual::Anatomy::API 1.302219
-      Test2::Manual::Anatomy::Context 1.302219
-      Test2::Manual::Anatomy::EndToEnd 1.302219
-      Test2::Manual::Anatomy::Event 1.302219
-      Test2::Manual::Anatomy::Hubs 1.302219
-      Test2::Manual::Anatomy::IPC 1.302219
-      Test2::Manual::Anatomy::Utilities 1.302219
-      Test2::Manual::Concurrency 1.302219
-      Test2::Manual::Contributing 1.302219
-      Test2::Manual::Testing 1.302219
-      Test2::Manual::Testing::Introduction 1.302219
-      Test2::Manual::Testing::Migrating 1.302219
-      Test2::Manual::Testing::Planning 1.302219
-      Test2::Manual::Testing::Todo 1.302219
-      Test2::Manual::Tooling 1.302219
-      Test2::Manual::Tooling::FirstTool 1.302219
-      Test2::Manual::Tooling::Formatter 1.302219
-      Test2::Manual::Tooling::Nesting 1.302219
-      Test2::Manual::Tooling::Plugin::TestExit 1.302219
-      Test2::Manual::Tooling::Plugin::TestingDone 1.302219
-      Test2::Manual::Tooling::Plugin::ToolCompletes 1.302219
-      Test2::Manual::Tooling::Plugin::ToolStarts 1.302219
-      Test2::Manual::Tooling::Subtest 1.302219
-      Test2::Manual::Tooling::TestBuilder 1.302219
-      Test2::Manual::Tooling::Testing 1.302219
-      Test2::Mock 1.302219
-      Test2::Plugin 1.302219
-      Test2::Plugin::BailOnFail 1.302219
-      Test2::Plugin::DieOnFail 1.302219
-      Test2::Plugin::ExitSummary 1.302219
-      Test2::Plugin::SRand 1.302219
-      Test2::Plugin::Times 1.302219
-      Test2::Plugin::UTF8 1.302219
-      Test2::Require 1.302219
-      Test2::Require::AuthorTesting 1.302219
-      Test2::Require::AutomatedTesting 1.302219
-      Test2::Require::EnvVar 1.302219
-      Test2::Require::ExtendedTesting 1.302219
-      Test2::Require::Fork 1.302219
-      Test2::Require::Module 1.302219
-      Test2::Require::NonInteractiveTesting 1.302219
-      Test2::Require::Perl 1.302219
-      Test2::Require::RealFork 1.302219
-      Test2::Require::ReleaseTesting 1.302219
-      Test2::Require::Threads 1.302219
-      Test2::Suite 1.302219
-      Test2::Todo 1.302219
-      Test2::Tools 1.302219
-      Test2::Tools::AsyncSubtest 1.302219
-      Test2::Tools::Basic 1.302219
-      Test2::Tools::Class 1.302219
-      Test2::Tools::ClassicCompare 1.302219
-      Test2::Tools::Compare 1.302219
-      Test2::Tools::Defer 1.302219
-      Test2::Tools::Encoding 1.302219
-      Test2::Tools::Event 1.302219
-      Test2::Tools::Exception 1.302219
-      Test2::Tools::Exports 1.302219
-      Test2::Tools::GenTemp 1.302219
-      Test2::Tools::Grab 1.302219
-      Test2::Tools::Mock 1.302219
-      Test2::Tools::Ref 1.302219
-      Test2::Tools::Refcount 1.302219
-      Test2::Tools::Spec 1.302219
-      Test2::Tools::Subtest 1.302219
-      Test2::Tools::Target 1.302219
-      Test2::Tools::Tester 1.302219
-      Test2::Tools::Tiny 1.302219
-      Test2::Tools::Warnings 1.302219
-      Test2::Util 1.302219
-      Test2::Util::ExternalMeta 1.302219
-      Test2::Util::Facets2Legacy 1.302219
-      Test2::Util::Grabber 1.302219
-      Test2::Util::Guard 1.302219
-      Test2::Util::HashBase 1.302219
-      Test2::Util::Importer 1.302219
-      Test2::Util::Ref 1.302219
-      Test2::Util::Sig 1.302219
-      Test2::Util::Stash 1.302219
-      Test2::Util::Sub 1.302219
-      Test2::Util::Table 1.302219
-      Test2::Util::Table::Cell 1.302219
-      Test2::Util::Table::LineBreak 1.302219
-      Test2::Util::Term 1.302219
-      Test2::Util::Times 1.302219
-      Test2::Util::Trace 1.302219
-      Test2::V0 1.302219
-      Test2::V1 1.302219
-      Test2::V1::Base 1.302219
-      Test2::V1::Handle 1.302219
-      Test2::Workflow 1.302219
-      Test2::Workflow::BlockBase 1.302219
-      Test2::Workflow::Build 1.302219
-      Test2::Workflow::Runner 1.302219
-      Test2::Workflow::Task 1.302219
-      Test2::Workflow::Task::Action 1.302219
-      Test2::Workflow::Task::Group 1.302219
-      Test::Builder 1.302219
-      Test::Builder::Formatter 1.302219
-      Test::Builder::Module 1.302219
-      Test::Builder::Tester 1.302219
-      Test::Builder::Tester::Color 1.302219
-      Test::Builder::Tester::Tie 1.302219
-      Test::Builder::TodoDiag 1.302219
-      Test::More 1.302219
-      Test::Simple 1.302219
-      Test::Tester 1.302219
-      Test::Tester::Capture 1.302219
-      Test::Tester::CaptureRunner 1.302219
-      Test::Tester::Delegate 1.302219
-      Test::use::ok 1.302219
-      ok 1.302219
-    requirements:
-      B 0
-      Data::Dumper 0
-      Exporter 0
-      ExtUtils::MakeMaker 0
-      File::Spec 0
-      File::Temp 0
-      Scalar::Util 1.13
-      Storable 0
-      Term::Table 0.013
-      Time::HiRes 0
-      overload 0
-      perl 5.006002
-      utf8 0
   Text-Glob-0.11
     pathname: R/RC/RCLAMP/Text-Glob-0.11.tar.gz
     provides:
@@ -2065,6 +1932,41 @@ DISTRIBUTIONS
       perl 5.008
       strict 0
       warnings 0
+  Text-Xslate-v3.5.9
+    pathname: S/SK/SKAJI/Text-Xslate-v3.5.9.tar.gz
+    provides:
+      Text::Xslate v3.5.9
+      Text::Xslate::Bridge undef
+      Text::Xslate::Bridge::Star undef
+      Text::Xslate::Compiler undef
+      Text::Xslate::Engine v3.5.9
+      Text::Xslate::HashWithDefault undef
+      Text::Xslate::PP v3.5.9
+      Text::Xslate::PP::Method undef
+      Text::Xslate::PP::Opcode v3.5.9
+      Text::Xslate::PP::State undef
+      Text::Xslate::PP::Type::Macro undef
+      Text::Xslate::PP::Type::Pair undef
+      Text::Xslate::PP::Type::Raw undef
+      Text::Xslate::Parser undef
+      Text::Xslate::Runner undef
+      Text::Xslate::Symbol undef
+      Text::Xslate::Syntax::Kolon undef
+      Text::Xslate::Syntax::Metakolon undef
+      Text::Xslate::Syntax::TTerse undef
+      Text::Xslate::Type::Raw undef
+      Text::Xslate::Util undef
+    requirements:
+      Data::MessagePack 0.38
+      Encode 2.26
+      ExtUtils::CBuilder 0
+      Module::Build 0.4005
+      Module::Build::XSUtil 0.19
+      Mouse v2.5.0
+      Scalar::Util 1.14
+      Storable 2.15
+      parent 0.221
+      perl 5.008001
   Time-Moment-0.46
     pathname: C/CH/CHANSEN/Time-Moment-0.46.tar.gz
     provides:
@@ -2081,15 +1983,6 @@ DISTRIBUTIONS
       Time::HiRes 0
       XSLoader 0.02
       perl 5.008001
-  Time-Piece-1.41
-    pathname: E/ES/ESAYM/Time-Piece-1.41.tar.gz
-    provides:
-      Time::Piece 1.41
-      Time::Seconds 1.41
-    requirements:
-      Exporter 5.57
-      ExtUtils::MakeMaker 0
-      Scalar::Util 0
   Try-Tiny-0.32
     pathname: E/ET/ETHER/Try-Tiny-0.32.tar.gz
     provides:

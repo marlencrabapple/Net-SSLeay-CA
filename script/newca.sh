@@ -52,7 +52,7 @@ keybits="${KEYBITS:-4096}"
 
 subj_cn="${SUBJ_CN:-$cnorg@$(hostfqdn) ${CArank:-Local} CA $keyalgo ${CAinitial:-X}${rev:-1}}"
 subj_o="${SUBJ_O:-$(hostfqdn)}"
-subj_ou="${SUBJ_OU:-Local User}"
+# subj_ou="${SUBJ_OU:-Local User}"
 subj_c="${SUBJ_C:-US}"
 
 newCAbase="$(perl -Mv5.40 -e 'say shift =~ s/\s/_/rg' "$subj_cn")"
@@ -80,7 +80,7 @@ openssl genpkey -algorithm "${pkeyconf[*]:0:1}" -pkeyopt "${pkeyconf[*]:1:1}" \
 info "Using '$(basename "$templateCA")' as a template for your CA certificate:\n"
 info "Replacing fields with configured options with distinguising details from your local session as defaults/fallback values.\n"
 
-subjstr="/CN=$subj_cn/O=$subj_o/OU=$subj_ou/C=$subj_c/"
+subjstr="/CN=$subj_cn/O=$subj_o${subj_ou:+"/OU=$subj_ou"}/C=$subj_c/"
 
 x509args=(-in "$templateCA" -x509toreq
   -out "$CAtop/$newCAcsr"

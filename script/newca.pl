@@ -36,3 +36,7 @@ method cli : common ($argv = \@ARGV) {
         }
     );
 }
+
+
+exit 1 unless $ENV{PKG_CONFIG_PATH};
+say join " ", map { qq!"$_"! } split /:/, $ENV{PKG_CONFIG_PATH}

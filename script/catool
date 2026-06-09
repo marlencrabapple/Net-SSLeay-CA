@@ -18,7 +18,6 @@ use Path::Tiny;
 use Net::Domain;
 use List::Util 'any';
 
-use Net::SSLeay::CA::Util::Cmd;
 use Net::SSLeay::CA::Certificate::SAN;
 
 my class x509 {

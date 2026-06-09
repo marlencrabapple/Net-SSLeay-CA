@@ -12,8 +12,10 @@ use vars '@EXPORT_OK';
 
 @EXPORT_OK = qw(hostfqdn domainname localuser slugify);
 
+use Const::Fast;
+use Sys::Hostname qw'';
 use List::Util 'first';
-use Net::Domain;
+use Net::Domain qw'';
 
 sub slugify( $in, %opt ) {
     $opt{replace} //= '_';
@@ -31,6 +33,27 @@ sub localuser {
 sub hostfqdn {
     Net::Domain::__SUB__->(@_);
 }
+
+sub hostname {
+    const our @dispatch => (
+        'Net::Domain'   => [qw(hostdomain hostname hostfqdn)],
+        'Sys::Hostname' => [qw(hostname)],
+
+        # 'Sys::Hostname::Long' => [qw(hostname_long)]
+    );
+
+    my @domain;
+
+    foreach my ( $package, $subname ) (@dispatch) {
+        foreach my $subname (@$subname) {
+            my $fqsub = \&{ $package . '::' . $subname };
+            push @domain, $fqsub->();
+        }
+    }
+    my $fqdn = first { /^.+\.[^\.]+$/ } @domain;
+    $fqdn // $domain[0];
+}
+
 
 sub domainname {
     Net::Domain::__SUB__->(@_);

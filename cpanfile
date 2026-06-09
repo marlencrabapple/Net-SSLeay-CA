@@ -1,6 +1,5 @@
 requires 'perl', 'v5.40';
 
-#requires 'overload';
 requires 'meta';
 requires 'Path::Tiny';
 requires 'Const::Fast';

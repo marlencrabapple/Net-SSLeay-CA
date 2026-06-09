@@ -649,10 +649,10 @@ DISTRIBUTIONS
       Text::ParseWords 0
       perl 5.006001
       version 0.87
-  Module-Build-Tiny-0.052
-    pathname: L/LE/LEONT/Module-Build-Tiny-0.052.tar.gz
+  Module-Build-Tiny-0.053
+    pathname: L/LE/LEONT/Module-Build-Tiny-0.053.tar.gz
     provides:
-      Module::Build::Tiny 0.052
+      Module::Build::Tiny 0.053
     requirements:
       CPAN::Meta 0
       DynaLoader 0
@@ -737,10 +737,10 @@ DISTRIBUTIONS
     requirements:
       ExtUtils::MakeMaker 0
       perl 5.006000
-  Module-Signature-0.93
-    pathname: T/TI/TIMLEGGE/Module-Signature-0.93.tar.gz
+  Module-Signature-0.96
+    pathname: T/TI/TIMLEGGE/Module-Signature-0.96.tar.gz
     provides:
-      Module::Signature 0.93
+      Module::Signature 0.96
     requirements:
       ExtUtils::MakeMaker 6.36
       File::Temp 0
@@ -813,11 +813,11 @@ DISTRIBUTIONS
       Scalar::Util 1.14
       XSLoader 0.02
       perl 5.010001
-  Net-SSLeay-1.94
-    pathname: C/CH/CHRISN/Net-SSLeay-1.94.tar.gz
+  Net-SSLeay-1.96
+    pathname: C/CH/CHRISN/Net-SSLeay-1.96.tar.gz
     provides:
-      Net::SSLeay 1.94
-      Net::SSLeay::Handle 1.94
+      Net::SSLeay 1.96
+      Net::SSLeay::Handle 1.96
     requirements:
       English 0
       ExtUtils::MakeMaker 0
@@ -833,16 +833,16 @@ DISTRIBUTIONS
     requirements:
       ExtUtils::MakeMaker 0
       Test::More 0
-  Object-Pad-0.823
-    pathname: P/PE/PEVANS/Object-Pad-0.823.tar.gz
+  Object-Pad-0.825
+    pathname: P/PE/PEVANS/Object-Pad-0.825.tar.gz
     provides:
-      Object::Pad 0.823
-      Object::Pad::ExtensionBuilder 0.823
-      Object::Pad::MOP::Class 0.823
-      Object::Pad::MOP::Field 0.823
-      Object::Pad::MOP::FieldAttr 0.823
-      Object::Pad::MOP::Method 0.823
-      Object::Pad::MetaFunctions 0.823
+      Object::Pad 0.825
+      Object::Pad::ExtensionBuilder 0.825
+      Object::Pad::MOP::Class 0.825
+      Object::Pad::MOP::Field 0.825
+      Object::Pad::MOP::FieldAttr 0.825
+      Object::Pad::MOP::Method 0.825
+      Object::Pad::MetaFunctions 0.825
     requirements:
       ExtUtils::CBuilder 0
       File::ShareDir 1.00
@@ -851,7 +851,7 @@ DISTRIBUTIONS
       XS::Parse::Keyword::Builder 0.48
       XS::Parse::Sublike 0.35
       XS::Parse::Sublike::Builder 0.35
-      perl 5.018
+      perl 5.022
   PPI-1.284
     pathname: O/OA/OALDERS/PPI-1.284.tar.gz
     provides:
@@ -1475,23 +1475,23 @@ DISTRIBUTIONS
       Compiler::Lexer 0.23
       Module::Build::Tiny 0.035
       perl 5.008005
-  Perl-Tidy-20250912
-    pathname: S/SH/SHANCOCK/Perl-Tidy-20250912.tar.gz
+  Perl-Tidy-20260204
+    pathname: S/SH/SHANCOCK/Perl-Tidy-20260204.tar.gz
     provides:
-      Perl::Tidy 20250912
-      Perl::Tidy::Debugger 20250912
-      Perl::Tidy::Diagnostics 20250912
-      Perl::Tidy::FileWriter 20250912
-      Perl::Tidy::Formatter 20250912
-      Perl::Tidy::HtmlWriter 20250912
-      Perl::Tidy::IOScalar 20250912
-      Perl::Tidy::IOScalarArray 20250912
-      Perl::Tidy::IndentationItem 20250912
-      Perl::Tidy::Logger 20250912
-      Perl::Tidy::Tokenizer 20250912
-      Perl::Tidy::VerticalAligner 20250912
-      Perl::Tidy::VerticalAligner::Alignment 20250912
-      Perl::Tidy::VerticalAligner::Line 20250912
+      Perl::Tidy 20260204
+      Perl::Tidy::Debugger 20260204
+      Perl::Tidy::Diagnostics 20260204
+      Perl::Tidy::FileWriter 20260204
+      Perl::Tidy::Formatter 20260204
+      Perl::Tidy::HtmlWriter 20260204
+      Perl::Tidy::IOScalar 20260204
+      Perl::Tidy::IOScalarArray 20260204
+      Perl::Tidy::IndentationItem 20260204
+      Perl::Tidy::Logger 20260204
+      Perl::Tidy::Tokenizer 20260204
+      Perl::Tidy::VerticalAligner 20260204
+      Perl::Tidy::VerticalAligner::Alignment 20260204
+      Perl::Tidy::VerticalAligner::Line 20260204
     requirements:
       ExtUtils::MakeMaker 0
       perl 5.008001

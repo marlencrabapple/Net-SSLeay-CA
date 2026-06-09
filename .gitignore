@@ -36,3 +36,5 @@ MYMETA.*
 
 .vscode
 .carmel
+
+*.pem

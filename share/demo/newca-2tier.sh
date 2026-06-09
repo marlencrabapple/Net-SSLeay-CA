@@ -3,6 +3,14 @@
 [[ "${DEBUG:-0}" -eq 1 ]] && set -x -o functrace
 set -o noclobber
 scriptbase="$(basename "$0")"
+
+slugify() {
+	in="$1"
+	perl -Mv5.40 -MNet::SSLeay::CA::Util \
+	-e 'say $_ for map { chomp $_;  Net::SSLeay::CA::Util::slugify($_, allow => q!@!) } (@ARGV)' \
+	"$in"
+}
+
 logbase="$(slugify "$scriptbase-$(date +s).txt")"
 
 [[ -z "$CA_ROOT" ]] && CA_ROOT="$(pwd)/.catool-root-$(date +%s)"

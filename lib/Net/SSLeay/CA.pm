@@ -41,6 +41,24 @@ field $X509;
 
 field $ret : reader;
 
+method $run ( $cmd, %opts ) {
+
+    # $Net::SSL::CA::run::read_stdin //= 1;
+
+    say "====\n" . join ' ', @$cmd if $$env{verbose};
+
+    my $run = run(
+        $cmd,
+        out => sub { my $line = shift; say $line; },
+        err => sub { say STDERR shift }
+    );
+
+    my $status = $run->status;
+    say "==> $status\n====" if $$env{verbose};
+
+    $status >> 8;
+}
+
 method touch ( $file, %opts ) {
     $opts{iolayer} //= '';
     $opts{close}   //= 1;
@@ -91,31 +109,6 @@ method copy_pemfile ( $infile, $outfile, $bound, %opts ) {
     close $OUT;
 
     $found == 2 ? 0 : 1;
-}
-
-method run ( $cmd, %opts ) {
-    $App::OpenSSL::CA::run::read_stdin //= 1;
-    my $read_stdin = $opts{stdin} // $App::OpenSSL::CA::run::read_stdin // 1;
-
-    my $bin = shift @$cmd;
-    say "====\n$bin " . join ' ', @$cmd if $$env{verbose};
-
-    my $run3ret = run3(
-        [ $bin, @$cmd ],
-        (
-              $read_stdin == 1 ? undef
-            : $read_stdin == 0 ? \undef
-            :                    undef
-        ),
-
-        $opts{outh} // undef,
-        $opts{errh} // undef
-    );
-
-    my $status = $? // 0;
-    say "==> $status\n====" if $$env{verbose};
-
-    $status >> 8;
 }
 
 method newcert ( $certout, $keyout, %opts ) {

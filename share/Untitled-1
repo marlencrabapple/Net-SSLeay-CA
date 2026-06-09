@@ -1,0 +1,11 @@
+export CATOP="/bs/trust/x509/CA/server"
+ CATEMPLATE="/home/nameless/Downloads/r12.pem" \
+        CA_CERT="/root/.catool/rootca/cincotuf.lan_Root_CA_RSA_G1.pem" \
+        CA_KEY="/root/.catool/rootca/private/cincotuf.lan_Root_CA_RSA_G1-key.pem" \
+        OPENSSL_CONFIG="/home/nameless/Net-SSLeay-CA.1/share/sub_ca.cnf" \
+        SUBJ_CN="systems@cincotuf.lan Server Auth RSA G1" \
+        SUBH_O="cincotuf.lan" \
+        SUBJ_OU="" \
+        KEYBITS=4096 \
+        /home/nameless/Net-SSLeay-CA.1/script/newca.sh 2>&1 \
+        | tee -a "$(slugify "$0-$(date +%s)").txt";

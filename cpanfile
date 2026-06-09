@@ -5,6 +5,7 @@ requires 'Path::Tiny';
 requires 'Const::Fast';
 requires 'Object::Pad';
 requires 'List::Util';
+requires 'TOML::Tiny';
 requires 'Net::SSLeay';
 requires 'Syntax::Keyword::Dynamically';
 requires 'Time::Piece';
@@ -34,6 +35,7 @@ on 'develop' => sub {
     requires 'inc::latest';
     requires 'Software::License';
     requires 'Module::Build';
+    requires 'CPAN::Meta::Prereqs';
     requires 'Module::Build::Tiny';
     requires 'Module::Signature';
 }

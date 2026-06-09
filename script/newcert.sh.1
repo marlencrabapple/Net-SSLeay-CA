@@ -1,14 +1,10 @@
 #!/usr/bin/env ksh
 set -Ce
 
-[[ "${DEBUG:-0}" -gt 0 ]] && set -x -ofunctrace
-
-VERBOSE="${VERBOSE:-0}"
+[[ ${DEBUG:-0} -gt 0 ]] && set -x -ofunctrace
 OPENSSL=${OPENSSL:-$(which openssl)}
 PERL5BIN="${PERL5BIN:-perl}"
 PERL5ARG+=" -Mv5.40 -MIO::Handle::Common -MNet::SSLeay::CA::Util"
-
-export subjcn_def
 
 function hostfqdn {
 	"$PERL5BIN" $PERL5ARG -e 'say Net::SSLeay::CA::Util::hostfqdn'
@@ -21,9 +17,8 @@ function slugify {
 }
 
 function dmsg {
-	in=("$@")
-
-	[[ "$DEBUG" -eq 1 ]] || return 0
+	in="$@"
+	[[ $DEBUG -eq 1 ]] || return 0
 
 	for msg in "${in[@]}"; do
 		>&2 echo -e "$msg"
@@ -35,17 +30,8 @@ function openssl {
 	shift
 	arg=("$@")
 
-	openssl_out=("$("$OPENSSL" "$cmd" "${arg[@]}" 2>&1)")
-	if [[ $VERBOSE -gt 0 ]] || [[ $DEBUG -gt 0 ]]; then
-	  >&2 printf "${openssl_out[@]}"
-	fi
-}
-
-function openssl_print {
-	cmd="$1"
-	shift
-	arg=("$@")
-	"$OPENSSL" "$cmd" "${arg[@]}"
+	openssl_out=$("$OPENSSL" "$cmd" "${arg[@]}" 2>&1)
+	dmsg "$openssl_out"
 }
 
 function openssl_genpkey {
@@ -128,7 +114,7 @@ function openssl_x509_req {
 		openssl_x509_arg+=(-CA "$cacert" -CAkey "$cakey")
 	else
 		openssl_x509_arg+=(-key "$keyfile")
-		>&2 echo -e "  No issuing CA provided! Self signing CSR...\n"
+		>&2 echo "▶ No issuing CA provided! Self signing CSR..."
 	fi
 
 	openssl x509 "${openssl_x509_arg[@]}"
@@ -148,7 +134,7 @@ fnbase="$(env SAN="$SAN" \
 	SUBJ_CN="$SUBJ_CN" \
 	$PERL5BIN $PERL5ARG -MList::Util=any -e 'my @san = (split /,/, $ENV{SAN}); my $c = scalar @san; my $fbase = shift @ARGV; $c-- if any { $_ =~ /^[^:]+:$ENV{SUBJ_CN}$/ } @san; $fbase .= "+$c" if $c >= 1; say $fbase' "$_fnbase")"
 
->&2 echo "▶ Generating private key material..."
+>&2 echo "▶ Generating private key material... ($pkeyalgo:$PKEY_BITS)"
 openssl_genpkey "${fnbase}.pem" "$pkeyalgo" "$PKEY_BITS"
 >&2 echo "  Wrote private key to '${fnbase}-key.pem' 🔚"
 >&2 echo ""
@@ -171,19 +157,17 @@ if [[ $openssl_x509_req_exit -eq 0 ]]; then
 	>&2 echo ""
 
 	>&2 echo "⭕️ Successfully generated and signed a leaf certificate! 🎉"
-		
-		if [[ "$VERBOSE" ]] || [[ "$DEBUG" ]]; then
-		>&2 echo "Certifcate Details:"
+	>&2 echo "Output certificate info:"
 
-		>&2 echo "======="
+	>&2 echo "======="
 
-		# I think I wasnt this to print to stdout...
-		openssl_print x509 -in "${fnbase}.pem" -text
+	# I think I wasnt this to print to stdout...
+	openssl_print x509 -in "${fnbase}.pem" -text
 
-		>&2 echo "======="
+	>&2 echo "======="
 
-		>&2 echo ""
-	fi
+	>&2 echo ""
+
 else
 	>&2 echo "❌️ Encountered error processing/signing CSR:"
 	>&2 echo "▷ $csrfile"

@@ -1,9 +1,8 @@
 #!/usr/bin/env ksh
 set -Ce
 
-[[ "${DEBUG:-0}" -gt 0 ]] && set -x -ofunctrace
+[[ ${DEBUG:-0} -gt 0 ]] && set -x -ofunctrace
 
-VERBOSE="${VERBOSE:-0}"
 OPENSSL=${OPENSSL:-$(which openssl)}
 PERL5BIN="${PERL5BIN:-perl}"
 PERL5ARG+=" -Mv5.40 -MIO::Handle::Common -MNet::SSLeay::CA::Util"
@@ -21,9 +20,8 @@ function slugify {
 }
 
 function dmsg {
-	in=("$@")
-
-	[[ "$DEBUG" -eq 1 ]] || return 0
+	in="$@"
+	[[ $DEBUG -eq 1 ]] || return 0
 
 	for msg in "${in[@]}"; do
 		>&2 echo -e "$msg"
@@ -35,10 +33,8 @@ function openssl {
 	shift
 	arg=("$@")
 
-	openssl_out=("$("$OPENSSL" "$cmd" "${arg[@]}" 2>&1)")
-	if [[ $VERBOSE -gt 0 ]] || [[ $DEBUG -gt 0 ]]; then
-	  >&2 printf "${openssl_out[@]}"
-	fi
+	openssl_out=$("$OPENSSL" "$cmd" "${arg[@]}" 2>&1)
+	dmsg "$openssl_out"
 }
 
 function openssl_print {
@@ -46,6 +42,7 @@ function openssl_print {
 	shift
 	arg=("$@")
 	"$OPENSSL" "$cmd" "${arg[@]}"
+
 }
 
 function openssl_genpkey {
@@ -128,7 +125,7 @@ function openssl_x509_req {
 		openssl_x509_arg+=(-CA "$cacert" -CAkey "$cakey")
 	else
 		openssl_x509_arg+=(-key "$keyfile")
-		>&2 echo -e "  No issuing CA provided! Self signing CSR...\n"
+		>&2 echo "▶ No issuing CA provided! Self signing CSR..."
 	fi
 
 	openssl x509 "${openssl_x509_arg[@]}"
@@ -171,8 +168,8 @@ if [[ $openssl_x509_req_exit -eq 0 ]]; then
 	>&2 echo ""
 
 	>&2 echo "⭕️ Successfully generated and signed a leaf certificate! 🎉"
-		
-		if [[ "$VERBOSE" ]] || [[ "$DEBUG" ]]; then
+
+	if [[ "$VERBOSE" ]] || [[ "$DEBUG" ]]; then
 		>&2 echo "Certifcate Details:"
 
 		>&2 echo "======="

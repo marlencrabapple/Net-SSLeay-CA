@@ -6,7 +6,7 @@ _hostfqdn=""
 slugify() {
 	in="$1"
 	perl -Mv5.40 -MNet::SSLeay::CA::Util \
-	-e 'map { chomp $_; Net::SSLeay::CA::Util::slugify($_) } (@ARGV)' \
+	-e 'say $_ for map { chomp $_  Net::SSLeay::CA::Util::slugify($_, allow => q!@!) } (@ARGV)' \
 	"$in"
 }
 

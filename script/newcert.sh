@@ -16,7 +16,7 @@ function hostfqdn {
 
 function slugify {
 	in="$1"
-	"$PERL5BIN" $PERL5ARG -e 'say $_ for map { chomp $_; Net::SSLeay::CA::Util::slugify($_, allow => q!@!) } (@ARGV)' \
+	"$PERL5BIN" $PERL5ARG -e 'dmsg \@INC; say $_ for map { chomp $_; Net::SSLeay::CA::Util::slugify($_, allow => q!@!) } (@ARGV)' \
 		"$in"
 }
 

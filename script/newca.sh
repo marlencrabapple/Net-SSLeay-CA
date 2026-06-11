@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-[[ "${DEBUG:-0}" -ne 0 ]] && set -x
+[[ "${DEBUG:-0}" -ne 0 ]] && set -x && perl -V && printenv
 
 _hostfqdn=""
 

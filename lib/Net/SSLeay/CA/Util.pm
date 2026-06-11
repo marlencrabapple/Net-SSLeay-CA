@@ -21,9 +21,11 @@ use Net::Domain qw'';
 sub slugify( $in, %opt ) {
     $opt{replace} //= '_';
 
+# TODO: Append/remove to allow
     my $allow = 'a-z0-9_.+=-';
     $allow .= quotemeta $opt{allow};
-    my $ptn = qr/[^${allow}a-z0-9_.+=-]+$/;
+
+    my $ptn = qr/^[${allow}a-z0-9_.+=-]+$/;
 
     ( $in =~ s/$ptn/$opt{replace}/gir );
 }

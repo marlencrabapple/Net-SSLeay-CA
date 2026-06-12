@@ -57,7 +57,7 @@ keybits="${KEYBITS:-4096}"
   fi
 )
 
-subj_cn="${SUBJ_CN:-$cnorg@$(hostfqdn) ${CArank:-Local} CA $keyalgo ${CAinitial:-X}${rev:-1}}"
+subj_cn="${SUBJ_CN:-$SUBJ_O@$(hostfqdn) ${CArank:-Local} CA $keyalgo ${CAinitial:-X}${rev:-1}}"
 subj_o="${SUBJ_O:-$(hostfqdn)}"
 # subj_ou="${SUBJ_OU:-Local User}"
 subj_c="${SUBJ_C:-US}"

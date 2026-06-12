@@ -15,7 +15,7 @@ use vars '@EXPORT_OK';
 
 use Const::Fast;
 use Sys::Hostname qw'';
-use List::Util 'first';
+use List::Util qw'first uniq';
 use Net::Domain qw'';
 use IO::Handle::Common;
 
@@ -23,13 +23,10 @@ sub slugify( $in, %opt ) {
     $opt{replace} //= '_';
 
 # TODO: Append/remove to allow
-    my $allow = 'a-z0-9_.+=-';
-    my $allow_quoted = quotemeta $opt{allow};
-    dmsg $allow, $allow_quoted;
+    my $allow = 'A-Za-z0-9_.+=-';
+    my $ptn   = qr/[^$allow$opt{allow}]/;
 
-    my $ptn = qr/[^$allow]+/;
-
-    ( $in =~ s/$ptn/$opt{replace}/ir );
+    ( $in =~ s/$ptn{1}/$opt{replace}/gir );
 }
 
 sub user_faux_mail {

@@ -12,20 +12,19 @@ use File::chdir;
 use List::Util qw'all first';
 use Time::HiRes 'gettimeofday';
 use Sys::Hostname 'hostname';
-use Net::SSLeay::CA::Base 'dmsg';
-use Net::SSLeay::CA::Util::Cmd;
+
 
 const our $SBTOOL_ROOT      => path( $ENV{SBTOOL_ROOT} // '/etc/sbtool' );
 const our $CERTFILE_EXT_PTN => qr/(pem|crt)$/;
 
-sub cmd ( $cmd_aref, $inh = \undef, $outh = undef, $errh = undef, %opts ) {
+# sub cmd ( $cmd_aref, $inh = \undef, $outh = undef, $errh = undef, %opts ) {
 
-    my ( $ret, $status, $err ) = ( run3( $cmd_aref, \undef ), $?, $! );
+#     my ( $ret, $status, $err ) = ( run3( $cmd_aref, \undef ), $?, $! );
 
-    die "❌️: $err ($status)"
-      || "Encountered unknonw error attempting to run:\n▷ " . join " ",
-      @$cmd_aref;
-}
+#     die "❌️: $err ($status)"
+#       || "Encountered unknonw error attempting to run:\n▷ " . join " ",
+#       @$cmd_aref;
+# }
 
 sub subj_common ( $argv = [@ARGV] ) {
     dmsg(
@@ -67,11 +66,11 @@ sub newreq ( $certfile, $keyfile, $level, %opts ) {
     push @req,
       ( '-subj', $ENV{ uc $level . 'SUBJBASE' } // "$ENV{SUBJBASE} $level" );
 
-    cmd( \@req );
+    run( \@req );
 }
 
 sub to_DER ($certfile) {
-    cmd(
+    run(
         [
             qw(openssl x509 -in),
             $certfile, '-out',
@@ -82,7 +81,7 @@ sub to_DER ($certfile) {
 }
 
 sub siglist_add ( $certfile, $guid = `uuidgen` ) {
-    cmd(
+    run(
         [
             'sign-efi-sig-list', '-g', $guid, $certfile,
             ( $certfile =~ s/$CERTFILE_EXT_PTN/esl/r )
@@ -94,7 +93,7 @@ sub siglist_sign ( $certfile, $keyfile, $guid ) {
     $certfile = path($certfile);
     my $certbase = ( $certfile->basename =~ s/$CERTFILE_EXT_PTN//r );
 
-    cmd(
+    run(
         [
             qw(sign-efi-sig-lsit -g),
             $guid, '-k', $keyfile, '-c', $certfile, $certbase, "$certbase.esl",

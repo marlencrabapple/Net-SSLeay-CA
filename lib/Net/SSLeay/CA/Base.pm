@@ -13,6 +13,8 @@ use Time::Moment;
 use List::Util 'first';
 use Syntax::Keyword::Dynamically;
 use Const::Fast;    #::Exporter;
+use IPC::Nosh;
+use IO::Handle::Common;
 use Exporter;
 
 use vars qw'@ISA @EXPORT';

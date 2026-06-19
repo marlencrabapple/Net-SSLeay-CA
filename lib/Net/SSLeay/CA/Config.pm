@@ -11,6 +11,7 @@ use Net::SSLeay::CA::Base;
 use TOML::Tiny;
 use List::Util 'any';
 use File::XDG;
+use File::HomeDir;
 use Text::Xslate;
 use Const::Fast;
 

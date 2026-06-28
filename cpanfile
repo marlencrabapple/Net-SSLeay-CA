@@ -16,6 +16,7 @@ requires 'IPC::Nosh';
 requires 'IO::Handle::Common';
 requires 'Text::Xslate';
 requires 'File::XDG';
+requires 'File::HomeDir';
 
 on 'test' => sub {
     requires 'Module::Build::Tiny';

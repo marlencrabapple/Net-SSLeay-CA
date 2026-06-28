@@ -17,6 +17,7 @@ use Getopt::Long qw'GetOptionsFromArray :config  auto_abbrev';
 
 use Net::SSLeay::CA::Base;
 use Net::SSLeay::CA::Util;
+use IO::Handle::Common;
 
 field $argv = [];
 field $cliopts : param(dest) = {};
@@ -28,10 +29,9 @@ method $run (%opts) {
 method run : common ($argv = \@ARGV, $dest = {}, %opts) {
     GetOptionsFromArray( $argv, $dest, 'config=s', );
     my $app = $class->new( dest => $dest, argv => $argv, %opts );
-    Net::SSLeay::CA::Base::dmsg($app);
+    dmsg $app;
     my $res = $app->$run;
-   Net::SSLeay::CA::Base::dmsg($app, $res);
-    ( $app, $res );
+    dmsg $app, $res;
 
 }
 

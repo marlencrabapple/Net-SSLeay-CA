@@ -55,6 +55,7 @@
          "requires" : {
             "Const::Fast" : "0",
             "Const::Fast::Exporter" : "0",
+            "File::HomeDir" : "0",
             "File::XDG" : "0",
             "File::chdir" : "0",
             "IO::Handle::Common" : "0",

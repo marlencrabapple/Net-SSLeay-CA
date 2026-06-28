@@ -1,192 +1,51 @@
-#!/usr/bin/env perl
 use Object::Pad ':experimental(:all)';
 
-package Net::SSLeay::CA::catool;
-use lib 'lib';
-
-class Net::SSLeay::CA::catool : does(Net::SSLeay::CA::Base);
+package Net::SSEeay::CA::catool;
+class Net::SSLeay::CA::catool;
 
 use utf8;
 use v5.40;
 
-use Const::Fast;
-use Time::Piece;
-use Time::Moment;
-use Net::SSLeay;
-use Getopt::Long;
-use Path::Tiny;
-use Net::Domain;
-use List::Util 'any';
 
-use Net::SSLeay::CA::Certificate::SAN;
 
-my class x509 {
+method cli :common ($argv = \@ARGV, %opt) {
+    GetOptionsFromArray($argv, \%cliopt, 'catop|cadir|capath:s', '<>' => sub ($barearg) {
 
-};
+    })
 
-#const our @CA_HEIRARCHY_RANK = qw(q);
-field $openssl;
-field $isroot = 1;
-field $issub;
-
-#field $CAkey;
-field $newCAkey;
-
-#field $CAcert;
-field $newCAcert;    #//=$CAkey;
-field $newCAcsr;
-
-field $signingCA;
-field $signingCAkey;
-field $keyalgo = 'RSA';
-field $keybits = 4096;
-field $CAtop   = "ENV{HOME}/.local/ca";
-field @days    = ();                      #$days;
-                                          #$CA_HEIRARCHY_RANK[0];
-field $CApathlen =
-  $issub && !$isroot ? 0 : 1;             #$CArank ne $CA_HEIRARCHY_RANK[0];
-
-field $CArank = 'Local';
-field $CArev;
-
-field $hostfqdn  = Net::Domain::hostfqdn;
-field $localuser = `whoami`;
-
-my class Subject {
-    field $cn : param;
-    field $o  : param;
-    field $ou : param;
-};
-
-field $subj : reader = {
-    Subject->new(
-        cn => "$localuser\@$hostfqdn $CArank CA 《$keyalgo$keybits✖$CArev》",
-        o  => "$hostfqdn",
-        ou => "Local User"
-    )
-};
-
-ADJUST : params ( :$subj ) {
-
-};
-
-method run : common ($argv = \@ARGV, %opts) {
-    my $catool = $class->new;
-    my $dest   = $opts{dest} //= {};
-
-    dmsg( $argv, \%opts, $catool, $dest );
-
-    my $cli = $catool->cli;
-
-    my %clicommon = (
-        qr/openssl-config/                          => 's',
-        qr/s(ubj(ect)?)?-?a(lt(ernate)?)?-?n(ame)?/ => 's'
-    );
-
-    $cli->command(
-        'qr/new-?ca/i' => [
-            qr/(common->name|cn)/ =>
-        ]
-    );
-
-    $catool->cli(
-        $argv, $dest,
-        {
-            'CAcert|cacert|ca-certfile=s',
-            'CAkey|cakey|ca-keyfile=s',
-            'signingCAcert|signing-ca-certfile=s',
-            'signingCAkey|signing-ca-keyfile=s',
-            'CAcsr|csr|ca-csr',
-            'CAclass|ca-class|class|CArank|ca-rank|rank=s',
-            'subject=h%',
-            'commonname|cn|common-name',
-            'org|organization',
-            'ou|organizational-unit|',
-            'days|daysvalid|days-valid=s',
-            'keyalgo|key-algorithm=s',
-            'keybits|key-bits=s',
-            'san|SAN|subject-alternative-name|subj-alt-name|subjaltname=s',
-            '<>' => sub ( $self, $barearg ) {
-                if ( my $field = $class->isvalid($barearg) ) {
-                    $self->subj->addfield($field)
-                      // fatal(
-                        "Error processing '$field' as a valid SAN value");
-                }
-            },
-            $opts{spec}->@*
-        },
-        %opts
-    );
-}
-
-method $CAclass : lvalue ($class) {
-    $CArank;
-}
-
-method genpkey ( $algo, $bits, %opts ) {
-
-    # pkeyconf = ( "$keyalgo" "bits:$keybits" )
-
-    #   openssl genpkey -algorithm "${pkeyconf[*]:0:1}" -
-    #   pkeyopt "${pkeyconf[*]:1:1}" \-out "$CAtop/private/$newCAkey"
-
-    # -pass "pass:$(pass generate \
-    #     -n "$newCAbase/$newCAkey" 128 &&-
-    #     pass show "Net::SSLeay::CA/$newCAkey" |
-    #     head -n 1)" \
-    # -out "$newCAkey"
-
-    my $pw = ( `pwgen -s 64` =~ s/[\n\r]+//rg );
-
-    exec( [@$openssl] );
-}
-
-method signCA {
-
-}
-
-method CAsign {
-
-}
-
-method selfsignCA {
-
-    # `openssl x509 -req -in "$CAtop/$newCAcsr" \-copy_extensions copyall \-out
-    #   "$newCAcert" \-set_subject
-    #   "/CN=$cnsubj/O=$hostfqdn/OU=Local User/C=US/" \-key "$newCAkey" -
-    #   days 3652`
-
-    Net::SSLeay::CA::Cmd->run(
-        [
-            @$openssl,            qw(x509 -req -in),
-            "$CAtop/$newCAcsr",   qw(copy_extensions copyall -out),
-            $newCAcert,           '-set_subject',
-            $subj->mutlivalue_SH, '-key',
-            "$newCAkey",          @days
-        ]
-    );
-}
-
-method selfsign {
-
-}
-
-method x509toreq () {
-
-}
-
-method x509toCA () {
-
-}
-
-method cli( $argv, $dest, $spec, %opts ) {
-    GetOptionsFromArray( $argv, $dest, @$spec );
 }
 
 package catool;
+use v5.40;
 
-sub run {
-    Net::SSLeay::CA::catool->run( \@ARGV );
-}
+__END__
 
-run
+=encoding utf8
+
+=head1 NAME
+
+catool is a tool for tooling around with CAs
+
+=head1 SYNOPSIS
+
+=head2 C<catool newca>
+ 
+ [--class={root,(subordinate||intermediate); default="root"}
+  {--name=<NAME>; default=*hostname*
+   --country
+   --locality
+   --email
+   | --subject=<ASN>
+   }
+  --parent=<DIR>
+  --pathlen=<0-...>; default=0
+  --openssl-config=<FILE>
+  --certfile=<FILE>
+  {--keyfile=<FILE> | --algorithm={rsa,ecc[=...]}; default="ecc=secp384r1"}
+  ...]
+
+=head2 C<catool ...> 
+
+...
+
+=cut

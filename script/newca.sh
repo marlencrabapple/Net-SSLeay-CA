@@ -40,7 +40,10 @@ signingCA_key="${SIGNINGCA_KEY:-${ISSUER_KEY:-$CA_KEY}}"
 
 CArank="${CARANK:-Local}"
 CAinitial="${CAINITIAL:-X}"
-templateCA="${CATEMPLATE:-$CAtop/x509toreq/pem/ISRG_Root_X1.pem}"
+
+[[ "$NO_TEMPLATECA" -eq 1 ]] || templateCA="${CATEMPLATE:-$CAtop/x509toreq/pem/ISRG_Root_X1.pem}"
+#templateCA="$CATEMPLATE"
+
 keyalgo="${KEYALGO:-RSA}"
 keybits="${KEYBITS:-4096}"
 # subj_o="$(whoami)"
@@ -95,6 +98,8 @@ x509args=(-in "$templateCA" -x509toreq
   -key "$CAtop/private/$newCAkey"
 	-copy_extensions copyall
 )
+
+[[ -n $templateCA ]] && x509args+=(-in "$templateCA")
 
 [[ -n $CLREXT ]] && x509args+=(-clrext)
 [[ -n $EXTFILE ]] && x509args+=(-extfile "$EXTFILE")

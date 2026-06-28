@@ -861,6 +861,30 @@ DISTRIBUTIONS
       Params::Util 0.38
       Parse::CPAN::Meta 1.38
       perl 5.006
+  File-HomeDir-1.006
+    pathname: R/RE/REHSACK/File-HomeDir-1.006.tar.gz
+    provides:
+      File::HomeDir 1.006
+      File::HomeDir::Darwin 1.006
+      File::HomeDir::Darwin::Carbon 1.006
+      File::HomeDir::Darwin::Cocoa 1.006
+      File::HomeDir::Driver 1.006
+      File::HomeDir::FreeDesktop 1.006
+      File::HomeDir::MacOS9 1.006
+      File::HomeDir::Test 1.006
+      File::HomeDir::Unix 1.006
+      File::HomeDir::Windows 1.006
+    requirements:
+      Carp 0
+      Cwd 3.12
+      ExtUtils::MakeMaker 0
+      File::Basename 0
+      File::Path 2.01
+      File::Spec 3.12
+      File::Temp 0.19
+      File::Which 0.05
+      POSIX 0
+      perl 5.008003
   File-ShareDir-1.118
     pathname: R/RE/REHSACK/File-ShareDir-1.118.tar.gz
     provides:
@@ -975,6 +999,7 @@ DISTRIBUTIONS
       IO::Handle::Common 0.01
       IO::Handle::Common::Handle undef
     requirements:
+      Class::Exporter 0
       Const::Fast 0
       Data::Dumper::Names 0
       Devel::StackTrace::WithLexicals 0
@@ -989,8 +1014,6 @@ DISTRIBUTIONS
     pathname: C/CR/CRABAPP/IPC-Nosh-0.01-TRIAL.tar.gz
     provides:
       IPC::Nosh 0.01
-      IPC::Nosh::Common undef
-      IPC::Nosh::Handle undef
       IPC::Nosh::Mux undef
     requirements:
       Class::Exporter 0
@@ -998,13 +1021,16 @@ DISTRIBUTIONS
       Data::Dumper::Names 0
       Devel::StackTrace::WithLexicals 0
       IO::Handle 0
+      IO::Handle::Common 0
       IPC::Run3 0
       Module::Build::Tiny 0.034
       Object::Pad 0
       Path::Tiny 0
       Regexp::Common 0
+      Stream::Buffered 0
       Syntax::Keyword::Defer 0
       Syntax::Keyword::Dynamically 0
+      Syntax::Keyword::Try 0
       perl v5.40.0
   IPC-Run-20250809.0
     pathname: N/NJ/NJM/IPC-Run-20250809.0.tar.gz
@@ -2409,6 +2435,16 @@ DISTRIBUTIONS
       parent 0
       perl 5.008001
       version 0
+  Stream-Buffered-0.03
+    pathname: D/DO/DOY/Stream-Buffered-0.03.tar.gz
+    provides:
+      Stream::Buffered 0.03
+      Stream::Buffered::Auto undef
+      Stream::Buffered::File undef
+      Stream::Buffered::PerlIO undef
+    requirements:
+      ExtUtils::MakeMaker 6.30
+      IO::File 1.14
   String-Format-1.18
     pathname: S/SR/SREZIC/String-Format-1.18.tar.gz
     provides:
@@ -2477,6 +2513,17 @@ DISTRIBUTIONS
       Module::Build 0.4004
       XS::Parse::Keyword 0.13
       XS::Parse::Keyword::Builder 0.13
+      perl 5.014
+  Syntax-Keyword-Try-0.31
+    pathname: P/PE/PEVANS/Syntax-Keyword-Try-0.31.tar.gz
+    provides:
+      Syntax::Keyword::Try 0.31
+      Syntax::Keyword::Try::Deparse 0.31
+    requirements:
+      ExtUtils::CBuilder 0
+      Module::Build 0.4004
+      XS::Parse::Keyword 0.35
+      XS::Parse::Keyword::Builder 0.35
       perl 5.014
   TOML-0.97
     pathname: K/KA/KARUPA/TOML-0.97.tar.gz

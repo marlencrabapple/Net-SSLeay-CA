@@ -15,10 +15,9 @@ use File::HomeDir;
 use Text::Xslate;
 use Const::Fast;
 
-const our $default_config => [qw'/etc/catool/catool.toml'];
-const our $path_key => [
-    qw'catop certfile keyfile config req_config parent_certfile parent_keyfile csr'
-];
+const our @default_config => qw'/etc/catool/catool.toml';
+const our @path_key =>
+  qw'catop certfile keyfile config req_config parent_certfile parent_keyfile csr';
 
 field $toml = TOML::Tiny->new;
 field $xs   = Text::Xslate->new;
@@ -26,7 +25,7 @@ field $xdg  = File::XDG->new;
 
 field $config_href : accessor(config) = {};
 
-field $config_file : param(file) = [@$default_config];
+field $config_file : param(file) = [@default_config];
 field $env    : reader : param = \%ENV;
 field $cliopt : reader : param = {};
 
@@ -42,15 +41,13 @@ ADJUSTPARAMS($params) {
 
         $config_href->@{ keys %$config } = values %$config;
     }
-
-    # dmsg( { self => $self, params => $params } )
 }
 
 method process_section ($ref) {
     if ( ref $ref eq 'HASH' ) {
         foreach my ( $k, $v ) (%$ref) {
-            if ( any { $k eq $_ } @$path_key ) {
-                $v = $self->make_path( $v, base => $$ref{catop} );
+            if ( any { $k eq $_ } @path_key ) {
+                $v = $self->to_path( $v, base => $$ref{catop} );
             }
         }
     }
@@ -63,7 +60,7 @@ method process_section ($ref) {
     }
 }
 
-method make_path ( $in, %opt ) {
+method to_path ( $in, %opt ) {
     $in = path($in);
 
     if ( $opt{base} && $in->is_relative ) {

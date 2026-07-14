@@ -88,7 +88,6 @@ sub make_dist( $dist, %opt ) {
         $tmp = Path::Tiny->tempdir;
 
         mvdir( $bindir, $tmp );
-
     }
 
     const my $archive_re => qr/^Wrote (($dist)-(.+?)(?:-(TRIAL))?\.tar\.gz)$/;

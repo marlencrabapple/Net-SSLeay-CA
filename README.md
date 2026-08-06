@@ -1,4 +1,3 @@
-[![Actions Status](https://github.com/marlencrabapple/Net-SSLeay-CA/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/marlencrabapple/Net-SSLeay-CA/actions?workflow=test)
 # NAME
 
 Net::SSLeay::CA - It's new $module

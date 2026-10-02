@@ -15,14 +15,14 @@ use vars '@EXPORT_OK';
 
 use Const::Fast;
 use Sys::Hostname qw'';
-use List::Util qw'first uniq';
-use Net::Domain qw'';
+use List::Util    qw'first uniq';
+use Net::Domain   qw'';
 use IO::Handle::Common;
 
 sub slugify( $in, %opt ) {
     $opt{replace} //= '_';
 
-# TODO: Append/remove to allow
+    # TODO: Append/remove to allow
     my $allow = 'A-Za-z0-9_.+=-';
     my $ptn   = qr/[^$allow$opt{allow}]/;
 
@@ -30,7 +30,7 @@ sub slugify( $in, %opt ) {
 }
 
 sub user_faux_mail {
-    first { /\.[^.]+$/ } @Net::Domain::{qw(hostfqdn domainname make_anonymous)};
+  first { /\.[^.]+$/ } @Net::Domain::{qw(hostfqdn domainname)};
 }
 
 sub localuser {
@@ -60,7 +60,6 @@ sub hostname {
     my $fqdn = first { /^.+\.[^\.]+$/ } @domain;
     $fqdn // $domain[0];
 }
-
 
 sub domainname {
     Net::Domain::domainname(@_);

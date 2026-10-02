@@ -1,19 +1,24 @@
 requires 'perl', 'v5.40';
 
 requires 'meta';
-requires 'Path::Tiny';
+requires 'Path::Try', '0.01_1', dist => 'CRABAPP/Path-Try-0.01_1-TRIAL.tar.gz';
 requires 'Const::Fast';
 requires 'Object::Pad';
 requires 'List::Util';
 requires 'TOML::Tiny';
 requires 'Net::SSLeay';
+requires 'Syntax::Keyword::Try';
 requires 'Syntax::Keyword::Dynamically';
 requires 'Time::Piece';
 requires 'Time::Moment';
-requires 'Const::Fast::Exporter';
 requires 'File::chdir';
-requires 'IPC::Nosh';
-requires 'IO::Handle::Common';
+
+requires 'IO::Handle::Common', '0.01.1',
+  dist => "CRABAPP/IO-Handle-Common-0.01.1-TRIAL.tar.gz";
+  
+requires 'IPC::Nosh', '0.01.4',
+  dist => "CRABAPP/IO-Nosh-0.01.4-TRIAL.tar.gz";
+
 requires 'Text::Xslate';
 requires 'File::XDG';
 requires 'File::HomeDir';
@@ -30,6 +35,7 @@ on 'test' => sub {
 on 'develop' => sub {
     requires 'Perl::Critic';
     requires 'Perl::Critic::Community';
+    requires 'Devel::Trace';
     requires 'Perl::Tidy';
     requires 'Minilla';
     requires 'App::FatPacker';

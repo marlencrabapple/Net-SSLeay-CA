@@ -8,7 +8,17 @@ OPENSSL=${OPENSSL:-$(which openssl)}
 PERL5BIN="${PERL5BIN:-perl}"
 PERL5ARG+=" -Mv5.40 -MIO::Handle::Common -MNet::SSLeay::CA::Util"
 
+ISSUER_CERT="${ISSUER_CERT:-"${CA_CERT:-"$CA"}"}"
+ISSUER_KEY="${ISSUER_KEY:-"${CA_KEY:-"$CAKEY"}"}"
+
 export subjcn_def
+
+function printhr {
+	env PRINTHR_OUTH="${2:-"STDERR"}" \
+	 perl \
+	  -Mv5.44 \
+	  -e 'my $h = $ENV{PRINTHR_OUTH}; my $hr = (q"=" x (shift @ARGV || 80)); eval qq*say $h \$hr, "\n"*' "$1"
+}
 
 function hostfqdn {
 	"$PERL5BIN" $PERL5ARG -e 'say Net::SSLeay::CA::Util::hostfqdn'
@@ -37,7 +47,7 @@ function openssl {
 
 	openssl_out=("$("$OPENSSL" "$cmd" "${arg[@]}" 2>&1)")
 	if [[ $VERBOSE -gt 0 ]] || [[ $DEBUG -gt 0 ]]; then
-	  >&2 printf "${openssl_out[@]}"
+		>&2 printf "${openssl_out[@]}"
 	fi
 }
 
@@ -91,20 +101,21 @@ function openssl_req {
 	typeset outfn="$2"
 
 	typeset fnbase_noext="${fnbase%.pem}"
-	# typeset subjfmt="/C=%s/CN=%s/"
-
 	typeset subjstr
 
-	subjstr="$(printf "/C=%s/CN=%s/" \
-		"${SUBJ_C:-US}" \
-		"${SUBJ_CN:-"$subjcn_def"}")"
+	subjstr="$(printf "/C=%s/" "${SUBJ_C:-US}")"
+
+	[[ -n "$SUBJ_CN" ]] && [[ "$SUBJ_CN" != "" ]] &&
+		subjstr+="$(printf "CN=%s/" "${SUBJ_CN:-"$subjcn_def"}")"
 
 	typeset -a openssl_req_arg=(
 		-new
-		-subj "$subjstr"
 		-addext "subjectAltName=$SAN"
 		-key "${fnbase_noext}-key.pem"
-		-out "$outfn")
+		-out "$outfn"
+	)
+
+	[[ -n "$subjstr" ]] && openssl_req_arg+=(-subj "$subjstr")
 
 	openssl req "${openssl_req_arg[@]}"
 }
@@ -113,10 +124,6 @@ function openssl_x509_req {
 	typeset csrfile="$1"
 	typeset keyfile="${2:-${csrfile%%.pem}-key.pem}"
 	typeset certout="${3:-"${csrfile%%.pem}"-cert.pem}"
-	# typeset cacert="$4"
-
-	typeset cacert="${ISSUER_CERT:-"${CA_CERT:-"$CA"}"}"
-	typeset cakey="${ISSUER_CERT:-"${CA_KEY:-"$CAKEY"}"}"
 
 	typeset -a openssl_x509_arg=(
 		-req
@@ -124,8 +131,8 @@ function openssl_x509_req {
 		-copy_extensions copy
 		-out "$certout")
 
-	if [[ -n $cacert ]] && [[ -n $cakey ]]; then
-		openssl_x509_arg+=(-CA "$cacert" -CAkey "$cakey")
+	if [[ -n $ISSUER_CERT ]] && [[ -n $ISSUER_KEY ]]; then
+		openssl_x509_arg+=(-CA "$ISSUER_CERT" -CAkey "$ISSUER_KEY")
 	else
 		openssl_x509_arg+=(-key "$keyfile")
 		>&2 echo -e "  No issuing CA provided! Self signing CSR...\n"
@@ -149,7 +156,9 @@ fnbase="$(env SAN="$SAN" \
 	$PERL5BIN $PERL5ARG -MList::Util=any -e 'my @san = (split /,/, $ENV{SAN}); my $c = scalar @san; my $fbase = shift @ARGV; $c-- if any { $_ =~ /^[^:]+:$ENV{SUBJ_CN}$/ } @san; $fbase .= "+$c" if $c >= 1; say $fbase' "$_fnbase")"
 
 >&2 echo "▶ Generating private key material..."
+
 openssl_genpkey "${fnbase}.pem" "$pkeyalgo" "$PKEY_BITS"
+
 >&2 echo "  Wrote private key to '${fnbase}-key.pem' 🔚"
 >&2 echo ""
 
@@ -171,22 +180,23 @@ if [[ $openssl_x509_req_exit -eq 0 ]]; then
 	>&2 echo ""
 
 	>&2 echo "⭕️ Successfully generated and signed a leaf certificate! 🎉"
-		
-		if [[ "$VERBOSE" ]] || [[ "$DEBUG" ]]; then
+
+	if [[ "$VERBOSE" ]] || [[ "$DEBUG" ]]; then
 		>&2 echo "Certifcate Details:"
 
-		>&2 echo "======="
+		printhr
 
-		# I think I wasnt this to print to stdout...
 		openssl_print x509 -in "${fnbase}.pem" -text
 
-		>&2 echo "======="
+printhr
 
-		>&2 echo ""
+		cat "${fnbase}.pem" "$ISSUER_CERT" >"${fnbase}-bundle.pem"
+		[[ $? -gt 0 ]] && >&2 echo "❌️ Error creating certificate bundle: $?"
+
+		>&2 echo "⭕️ Signed ertificate and key files:"
+		echo "${fnbase}.pem ${fnbase}-bundle.pem ${fnbase}-key.pem"
 	fi
 else
 	>&2 echo "❌️ Encountered error processing/signing CSR:"
 	>&2 echo "▷ $csrfile"
-	# echo "Please include this file if you create a bug on our issue tracker:"
-	# echo "▷ https://"
 fi

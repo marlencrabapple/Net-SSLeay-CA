@@ -4,15 +4,14 @@ package sbtool::keygen;
 use utf8;
 use v5.40;
 
-use lib 'lib';
-
 use Const::Fast;
-use Path::Tiny;
+use IO::Handle::Common;
+use IPC::Nosh;
+use Path::Try;
 use File::chdir;
 use List::Util qw'all first';
 use Time::HiRes 'gettimeofday';
 use Sys::Hostname 'hostname';
-
 
 const our $SBTOOL_ROOT      => path( $ENV{SBTOOL_ROOT} // '/etc/sbtool' );
 const our $CERTFILE_EXT_PTN => qr/(pem|crt)$/;
@@ -27,14 +26,7 @@ const our $CERTFILE_EXT_PTN => qr/(pem|crt)$/;
 # }
 
 sub subj_common ( $argv = [@ARGV] ) {
-    dmsg(
-        {
-            argv          => $argv,
-            NAME          => $ENV{NAME},
-            SBINIT_SUBJCN => $ENV{SBINIT_SUBJCN},
-            hostname      => hostname
-        }
-    );
+    dmsg( { $argv, $ENV{NAME}, $ENV{SBINIT_SUBJCN}, hostname } );
 
     my $cn   = ( $ENV{NAME} || $ENV{SBINIT_SUBJCN} || shift @ARGV || hostname );
     my $subj = "/CN=$cn";

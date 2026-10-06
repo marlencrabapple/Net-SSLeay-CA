@@ -25,24 +25,6 @@ use subs qw(dmsg epoch error success);
 const our $DEBUG        => $ENV{DEBUG} // 0;
 const our $S_UNKNOWNERR => 'Unknown fatal error';
 
-APPLY {
-    use v5.40;
-    use IPC::Nosh;
-    use IO::Handle::Common;
-    our @EXPORT = qw'run dmsg info success error msg';
-}
-
-# field $env : param(runenv) : inheritable {
-#     (
-#         map {
-#             my $name = $_;
-#             my $val =
-#               first { $_ } @ENV{ map { uc "$_$name" } ( 'ca_', '' ) };
-#             $name => $val
-#         } qw(verbose debug)
-#     )
-# }
-# field $debug : accessor : param = $DEBUG;
 
 sub epoch( $join = '', %opts ) {
     join $join, Time::HiRes::gettimeofday;
